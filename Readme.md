@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Пётр Дробышев](https://up.htmlacademy.ru/javascript/18/user/521641).
-* Наставник: `Олег Петров`.
+* Наставник: [Олег Петров](https://htmlacademy.ru/profile/fyvfyv).
 
 ---
 
