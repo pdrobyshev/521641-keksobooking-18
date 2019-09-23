@@ -7,65 +7,75 @@ var ROOMS = [1, 2, 3, 4];
 var GUESTS = [2, 4, 6, 8];
 var HOURS = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var DESCRIPTION = ['Описание-1', 'Описание-2', 'Описание-3', 'Описание-4', 'Описание-5', 'Описание-6', 'Описание-7', 'Описание-8'];
+var DESCRIPTIONS = ['Описание-1', 'Описание-2', 'Описание-3', 'Описание-4', 'Описание-5', 'Описание-6', 'Описание-7', 'Описание-8'];
 var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
 ];
-var map = document.querySelector('.map');
-var mapPinsList = map.querySelector('.map__pins');
-var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var PIN = {
+var pinParams = {
   WIDTH: 50,
   MIN_X: 0,
-  MAX_X: map.offsetWidth,
+  MAX_X: 1200,
   MIN_Y: 130,
   MAX_Y: 630
 };
+var ADVERTISEMENTS_AMOUNT = 8;
 
-var getRandomAdData = function (arr) {
+var map = document.querySelector('.map');
+var mapPinsList = map.querySelector('.map__pins');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+var getRandomArrayElement = function (arr) {
   var randomIndex = Math.floor(Math.random() * arr.length);
 
   return arr[randomIndex];
 };
 
 var getRandomArrayPart = function (arr) {
-  var randomIndex = Math.floor(Math.random() * arr.length);
+  var randomIndex = Math.floor(Math.random() * arr.length + 1);
 
-  return randomIndex !== 0 ? arr.slice(0, randomIndex) : arr.slice(0, randomIndex + 1);
+  return arr.slice(0, randomIndex);
 };
 
-function getRandomCoord(min, max) {
+var getRandomArbitrary = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 
-var generateAdvertisementsList = function () {
+var getAvatarPath = function (index) {
+  return index < 9 ? 'img/avatars/user0' + (index + 1) + '.png' : 'img/avatars/user' + (index + 1) + '.png';
+};
+
+var generateAdvertisement = function (i) {
+  return {
+    author: {
+      avatar: getAvatarPath(i),
+    },
+    offer: {
+      title: getRandomArrayElement(TITLES),
+      address: location.x + ', ' + location.y,
+      price: getRandomArrayElement(PRICES),
+      type: getRandomArrayElement(TYPES),
+      rooms: getRandomArrayElement(ROOMS),
+      guests: getRandomArrayElement(GUESTS),
+      checkin: getRandomArrayElement(HOURS),
+      checkout: getRandomArrayElement(HOURS),
+      features: getRandomArrayPart(FEATURES),
+      description: getRandomArrayElement(DESCRIPTIONS),
+      photos: getRandomArrayPart(PHOTOS),
+    },
+    location: {
+      x: getRandomArbitrary(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH),
+      y: getRandomArbitrary(pinParams.MIN_Y, pinParams.MAX_Y),
+    }
+  };
+};
+
+var generateAdvertisementsList = function (amount) {
   var advertisementsList = [];
 
-  for (var i = 0; i < 8; i++) {
-    var advertisement = {
-      author: {
-        avatar: 'img/avatars/user0' + (i + 1) + '.png',
-      },
-      offer: {
-        title: getRandomAdData(TITLES),
-        address: '600, 350',
-        price: getRandomAdData(PRICES),
-        type: getRandomAdData(TYPES),
-        rooms: getRandomAdData(ROOMS),
-        guests: getRandomAdData(GUESTS),
-        checkin: getRandomAdData(HOURS),
-        checkout: getRandomAdData(HOURS),
-        features: getRandomArrayPart(FEATURES),
-        description: getRandomAdData(DESCRIPTION),
-        photos: getRandomArrayPart(PHOTOS),
-      },
-      location: {
-        x: getRandomCoord(PIN.MIN_X, PIN.MAX_X - PIN.WIDTH),
-        y: getRandomCoord(PIN.MIN_Y, PIN.MAX_Y),
-      }
-    };
+  for (var i = 0; i < amount; i++) {
+    var advertisement = generateAdvertisement(i);
 
     advertisementsList.push(advertisement);
   }
@@ -73,7 +83,7 @@ var generateAdvertisementsList = function () {
   return advertisementsList;
 };
 
-var generatePins = function (advertisement) {
+var generatePin = function (advertisement) {
   var pin = pinTemplate.cloneNode(true);
 
   pin.style.left = advertisement.location.x + 'px';
@@ -84,18 +94,18 @@ var generatePins = function (advertisement) {
   return pin;
 };
 
-var renderPins = function (advertisementData) {
+var renderPins = function (advertisementsList) {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < advertisementData.length; i++) {
-    fragment.appendChild(generatePins(advertisementData[i]));
-  }
+  advertisementsList.forEach(function (advertisement) {
+    fragment.appendChild(generatePin(advertisement));
+  });
 
   mapPinsList.appendChild(fragment);
 };
 
 map.classList.remove('map--faded');
 
-var advertisementsList = generateAdvertisementsList();
+var advertisementsList = generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
 
 renderPins(advertisementsList);
