@@ -1,5 +1,6 @@
 'use strict';
 
+var ADVERTISEMENTS_AMOUNT = 8;
 var TITLES = ['Заголовок-1', 'Заголовок-2', 'Заголовок-3', 'Заголовок-4', 'Заголовок-5', 'Заголовок-6', 'Заголовок-7', 'Заголовок-8'];
 var PRICES = [1000, 3500, 12000, 1234];
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
@@ -20,7 +21,17 @@ var pinParams = {
   MIN_Y: 130,
   MAX_Y: 630
 };
-var ADVERTISEMENTS_AMOUNT = 8;
+var offerTypesTranslation = {
+  'flat': 'Квартира',
+  'bungalo': 'Бунгало',
+  'house': 'Дом',
+  'palace': 'Дворец'
+};
+var photoParams = {
+  WIDTH: 45,
+  HEIGHT: 40,
+  ALT: 'Фотография жилья'
+};
 
 var map = document.querySelector('.map');
 var mapPinsList = map.querySelector('.map__pins');
@@ -39,7 +50,7 @@ var getRandomArrayPart = function (arr) {
   return arr.slice(0, randomIndex);
 };
 
-var getRandomArbitrary = function (min, max) {
+var getRandomIntegerInRange = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
@@ -48,8 +59,8 @@ var getAvatarPath = function (index) {
 };
 
 var generateAdvertisement = function (i) {
-  var coordX = getRandomArbitrary(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH);
-  var coordY = getRandomArbitrary(pinParams.MIN_Y, pinParams.MAX_Y);
+  var coordX = getRandomIntegerInRange(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH);
+  var coordY = getRandomIntegerInRange(pinParams.MIN_Y, pinParams.MAX_Y);
 
   return {
     author: {
@@ -108,35 +119,39 @@ var renderPins = function (advertisementsList) {
   mapPinsList.appendChild(fragment);
 };
 
-var getAdvertisementOfferType = function (advertisement) {
-  switch (advertisement.offer.type) {
-    case 'flat':
-      return 'Квартира';
-    case 'bungalo':
-      return 'Бунгало';
-    case 'house':
-      return 'Дом';
-    case 'palace':
-      return 'Дворец';
-  }
-  return false;
+var generateAdvertisementFeature = function (feature) {
+  var cardFeature = document.createElement('li');
+  cardFeature.className = 'popup__feature popup__feature--' + feature;
+
+  return cardFeature;
 };
 
 var renderAdvertisementFeatures = function (advertisement) {
-  var cardFeatures = '';
+  var cardFeatures = document.createDocumentFragment();
 
   advertisement.offer.features.forEach(function (feature) {
-    cardFeatures += '<li class="popup__feature popup__feature--' + feature + '"></li>';
+    cardFeatures.appendChild(generateAdvertisementFeature(feature));
   });
 
   return cardFeatures;
 };
 
+var generateAdvertisementPhoto = function (src) {
+  var photo = document.createElement('img');
+  photo.className = 'popup__photo';
+  photo.setAttribute('src', src);
+  photo.setAttribute('width', photoParams.WIDTH);
+  photo.setAttribute('height', photoParams.HEIGHT);
+  photo.setAttribute('alt', photoParams.ALT);
+
+  return photo;
+};
+
 var renderAdvertisementPhotos = function (advertisement) {
-  var photos = '';
+  var photos = document.createDocumentFragment();
 
   advertisement.offer.photos.forEach(function (photo) {
-    photos += '<img src="' + photo + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">';
+    photos.appendChild(generateAdvertisementPhoto(photo));
   });
 
   return photos;
@@ -148,13 +163,15 @@ var generateCard = function (advertisement) {
   card.querySelector('.popup__title').textContent = advertisement.offer.title;
   card.querySelector('.popup__text--address').textContent = advertisement.offer.address;
   card.querySelector('.popup__text--price').textContent = advertisement.offer.price + '₽/ночь';
-  card.querySelector('.popup__type').textContent = getAdvertisementOfferType(advertisement);
+  card.querySelector('.popup__type').textContent = offerTypesTranslation[advertisement.offer.type];
   card.querySelector('.popup__text--capacity').textContent = advertisement.offer.rooms + ' комнаты для ' + advertisement.offer.guests + ' гостей';
   card.querySelector('.popup__text--time').textContent = 'Заезд после ' + advertisement.offer.checkin + ', выезд до ' + advertisement.offer.checkout;
-  card.querySelector('.popup__features').innerHTML = renderAdvertisementFeatures(advertisement);
+  card.querySelector('.popup__features').innerHTML = '';
+  card.querySelector('.popup__features').appendChild(renderAdvertisementFeatures(advertisement));
   card.querySelector('.popup__description').textContent = advertisement.offer.description;
-  card.querySelector('.popup__photos').innerHTML = renderAdvertisementPhotos(advertisement);
-  card.querySelector('.popup__avatar').setAttribute('src', advertisement.author.avatar.toString());
+  card.querySelector('.popup__photos').innerHTML = '';
+  card.querySelector('.popup__photos').appendChild(renderAdvertisementPhotos(advertisement));
+  card.querySelector('.popup__avatar').setAttribute('src', advertisement.author.avatar);
 
   return card;
 };
