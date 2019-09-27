@@ -14,6 +14,8 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
 ];
+var ENTER_KEYCODE = 13;
+var isMapActive = false;
 var pinParams = {
   WIDTH: 50,
   MIN_X: 0,
@@ -39,6 +41,13 @@ var map = document.querySelector('.map');
 var mapPinsList = map.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var adForm = document.querySelector('.ad-form');
+var adFormAddress = adForm.querySelector('input[name="address"]');
+var rooms = adForm.querySelector('#room_number');
+var roomsCapacity = adForm.querySelector('#capacity');
+var mapPin = mapPinsList.querySelector('.map__pin--main');
+var formElements = adForm.querySelectorAll('.ad-form__element');
+var filterElements = map.querySelectorAll('.map__filter');
 
 var getRandomArrayElement = function (arr) {
   var randomIndex = Math.floor(Math.random() * arr.length);
@@ -182,43 +191,11 @@ var renderCard = function (cardElement) {
   mapPinsList.insertAdjacentElement('afterend', cardElement);
 };
 
-var advertisementsList = generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
-
-renderPins(advertisementsList);
-
-var firstAdvertisement = advertisementsList[0];
-
-var card = generateCard(firstAdvertisement);
-
-renderCard(card);
-
-// eslint-disable-next-line valid-jsdoc
-/** ***************************************************************************************************
- *****************************************************************************************************/
-var ENTER_KEYCODE = 13;
-var adForm = document.querySelector('.ad-form');
-var adFormAddress = adForm.querySelector('input[name="address"]');
-var mapPin = mapPinsList.querySelector('.map__pin--main');
-var isMapActive = false;
-
-var activateFormElement = function (formElement, isActive) {
-  return isActive === false ? formElement.setAttribute('disabled', isActive) : formElement.removeAttribute('disabled');
-};
-
-var activateFormElements = function (isActive) {
-  var formElements = adForm.querySelectorAll('.ad-form__element');
-  var filterElements = map.querySelectorAll('.map__filter');
-
-  formElements.forEach(function (formElement) {
-    activateFormElement(formElement, isActive);
-  });
-
-  filterElements.forEach(function (filterElement) {
-    activateFormElement(filterElement, isActive);
+var activateFormElements = function (elements, isActive) {
+  Array.prototype.forEach.call(elements, function (element) {
+    return isActive === false ? element.setAttribute('disabled', isActive) : element.removeAttribute('disabled');
   });
 };
-
-activateFormElements(false);
 
 var getMapPinCoords = function () {
   var x = pinParams.X + Math.round(mapPin.offsetWidth / 2);
@@ -230,49 +207,45 @@ var setAddress = function () {
   adFormAddress.value = getMapPinCoords();
 };
 
-setAddress();
+var compareRoomsToCapacity = function () {
+  var capacityOptions = roomsCapacity.querySelectorAll('option');
+  var roomActiveOption = rooms.options[rooms.selectedIndex].value;
 
-var rooms = adForm.querySelector('#room_number');
-var roomsCapacity = adForm.querySelector('#capacity');
-var roomCapacities = {
-  0: 'не для гостей',
-  1: 'для 1 гостя',
-  2: 'для 2 гостей',
-  3: 'для 3 гостей'
+  capacityOptions.forEach(function (option) {
+    option.disabled = true;
+  });
+
+  capacityOptions[roomActiveOption - 1].disabled = false;
+  roomsCapacity.value = roomActiveOption;
 };
-
-// rooms.addEventListener('change', function (evt) {
-//   var roomValue = evt.target.value;
-//
-//   if (roomValue ===)
-// });
-
-// var adFormSubmitHandler = function () {
-//   var a = adForm.querySelector('#capacity option');
-//   var roomValue = rooms.options[rooms.selectedIndex].value;
-//   var roomCapacity = roomsCapacity.options[roomsCapacity.selectedIndex].value;
-//   console.log(roomValue);
-//   console.log(roomCapacity);
-//
-//   if (roomCapacity !== roomValue) {
-//     a.setCustomValidity('asd');
-//   } else {
-//     roomsCapacity.setCustomValidity('');
-//   }
-// };
-//
-// adForm.addEventListener('submit', adFormSubmitHandler);
 
 var activateMap = function () {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
-  activateFormElements(true);
+  activateFormElements(formElements, true);
+  activateFormElements(filterElements, true);
   isMapActive = true;
   setAddress();
-  // adFormSubmitHandler();
-  // mapPin.removeEventListener('keydown', activateMap);
-  // mapPin.removeEventListener('mousedown', activateMap);
+  compareRoomsToCapacity();
+  rooms.addEventListener('change', compareRoomsToCapacity);
+  mapPin.removeEventListener('keydown', activateMap);
+  mapPin.removeEventListener('mousedown', activateMap);
 };
+
+var advertisementsList = generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
+
+renderPins(advertisementsList);
+
+var firstAdvertisement = advertisementsList[0];
+
+var card = generateCard(firstAdvertisement);
+
+renderCard(card);
+
+activateFormElements(formElements, false);
+activateFormElements(filterElements, false);
+
+setAddress();
 
 mapPin.addEventListener('mousedown', activateMap);
 mapPin.addEventListener('keydown', function (evt) {
