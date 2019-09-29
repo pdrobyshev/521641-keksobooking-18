@@ -260,8 +260,6 @@ disableFormElements(filterElements, true);
 
 setAddress();
 
-activateMap();
-
 mapPin.addEventListener('mousedown', activateMap);
 mapPin.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
