@@ -36,6 +36,12 @@ var photoParams = {
   HEIGHT: 40,
   ALT: 'Фотография жилья'
 };
+var maxGuestsInRoom = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  4: [4]
+};
 
 var map = document.querySelector('.map');
 var mapPinsList = map.querySelector('.map__pins');
@@ -191,15 +197,15 @@ var renderCard = function (cardElement) {
   mapPinsList.insertAdjacentElement('afterend', cardElement);
 };
 
-var activateFormElements = function (elements, isActive) {
+var disableFormElements = function (elements, isActive) {
   Array.prototype.forEach.call(elements, function (element) {
-    return isActive === false ? element.setAttribute('disabled', isActive) : element.removeAttribute('disabled');
+    element.disabled = isActive;
   });
 };
 
 var getMapPinCoords = function () {
   var x = pinParams.X + Math.round(mapPin.offsetWidth / 2);
-  var y = isMapActive === false ? pinParams.Y + Math.round(mapPin.offsetHeight / 2) : pinParams.Y + mapPin.offsetHeight;
+  var y = !isMapActive ? pinParams.Y + Math.round(mapPin.offsetHeight / 2) : pinParams.Y + mapPin.offsetHeight;
   return 'x: ' + x + ' y: ' + y;
 };
 
@@ -215,21 +221,28 @@ var compareRoomsToCapacity = function () {
     option.disabled = true;
   });
 
-  capacityOptions[roomActiveOption - 1].disabled = false;
+  maxGuestsInRoom[roomActiveOption].forEach(function (guestsInRoom) {
+    capacityOptions.forEach(function (capacityOption) {
+      if (guestsInRoom === Number(capacityOption.value)) {
+        capacityOption.disabled = false;
+      }
+    });
+  });
+
   roomsCapacity.value = roomActiveOption;
 };
 
 var activateMap = function () {
-  map.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
-  activateFormElements(formElements, true);
-  activateFormElements(filterElements, true);
+  disableFormElements(formElements, false);
+  disableFormElements(filterElements, false);
   isMapActive = true;
   setAddress();
   compareRoomsToCapacity();
   rooms.addEventListener('change', compareRoomsToCapacity);
   mapPin.removeEventListener('keydown', activateMap);
   mapPin.removeEventListener('mousedown', activateMap);
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
 };
 
 var advertisementsList = generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
@@ -242,10 +255,12 @@ var card = generateCard(firstAdvertisement);
 
 renderCard(card);
 
-activateFormElements(formElements, false);
-activateFormElements(filterElements, false);
+disableFormElements(formElements, true);
+disableFormElements(filterElements, true);
 
 setAddress();
+
+activateMap();
 
 mapPin.addEventListener('mousedown', activateMap);
 mapPin.addEventListener('keydown', function (evt) {
