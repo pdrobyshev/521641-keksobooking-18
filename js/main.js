@@ -225,7 +225,11 @@ var compareRoomsToCapacity = function () {
   });
 
   if (capacityActiveOption.hasAttribute('disabled')) {
-    roomsCapacity.selectedIndex = roomsCapacity.querySelector('option:not(:checked)').value - 1;
+    for (var i = 0; i < capacityOptions.length; i++) {
+      if (!capacityOptions[i].hasAttribute('disabled')) {
+        roomsCapacity.selectedIndex = i;
+      }
+    }
   }
 };
 
