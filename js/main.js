@@ -40,7 +40,7 @@ var maxGuestsInRoom = {
   1: [1],
   2: [1, 2],
   3: [1, 2, 3],
-  4: [4]
+  100: [0]
 };
 
 var map = document.querySelector('.map');
@@ -197,7 +197,7 @@ var renderCard = function (cardElement) {
   mapPinsList.insertAdjacentElement('afterend', cardElement);
 };
 
-var disableFormElements = function (elements, isActive) {
+var toggleFormElements = function (elements, isActive) {
   Array.prototype.forEach.call(elements, function (element) {
     element.disabled = isActive;
   });
@@ -225,16 +225,15 @@ var compareRoomsToCapacity = function () {
     capacityOptions.forEach(function (capacityOption) {
       if (guestsInRoom === Number(capacityOption.value)) {
         capacityOption.disabled = false;
+        capacityOption.selected = true;
       }
     });
   });
-
-  roomsCapacity.value = roomActiveOption;
 };
 
 var activateMap = function () {
-  disableFormElements(formElements, false);
-  disableFormElements(filterElements, false);
+  toggleFormElements(formElements, false);
+  toggleFormElements(filterElements, false);
   isMapActive = true;
   setAddress();
   compareRoomsToCapacity();
@@ -255,8 +254,8 @@ var card = generateCard(firstAdvertisement);
 
 renderCard(card);
 
-disableFormElements(formElements, true);
-disableFormElements(filterElements, true);
+toggleFormElements(formElements, true);
+toggleFormElements(filterElements, true);
 
 setAddress();
 
