@@ -37,10 +37,10 @@ var photoParams = {
   ALT: 'Фотография жилья'
 };
 var maxGuestsInRoom = {
-  1: [1],
-  2: [1, 2],
-  3: [1, 2, 3],
-  100: [0]
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0']
 };
 
 var map = document.querySelector('.map');
@@ -54,6 +54,7 @@ var roomsCapacity = adForm.querySelector('#capacity');
 var mapPin = mapPinsList.querySelector('.map__pin--main');
 var formElements = adForm.querySelectorAll('.ad-form__element');
 var filterElements = map.querySelectorAll('.map__filter');
+var capacityOptions = roomsCapacity.querySelectorAll('option');
 
 var getRandomArrayElement = function (arr) {
   var randomIndex = Math.floor(Math.random() * arr.length);
@@ -214,21 +215,18 @@ var setAddress = function () {
 };
 
 var compareRoomsToCapacity = function () {
-  var capacityOptions = roomsCapacity.querySelectorAll('option');
-  var roomActiveOption = rooms.options[rooms.selectedIndex].value;
+  var roomActiveOption = rooms.value;
+  var capacityActiveOption = roomsCapacity.options[roomsCapacity.selectedIndex];
 
-  capacityOptions.forEach(function (option) {
-    option.disabled = true;
-  });
-
-  maxGuestsInRoom[roomActiveOption].forEach(function (guestsInRoom) {
+  maxGuestsInRoom[roomActiveOption].forEach(function () {
     capacityOptions.forEach(function (capacityOption) {
-      if (guestsInRoom === Number(capacityOption.value)) {
-        capacityOption.disabled = false;
-        capacityOption.selected = true;
-      }
+      capacityOption.disabled = !maxGuestsInRoom[roomActiveOption].includes(capacityOption.value);
     });
   });
+
+  if (capacityActiveOption.hasAttribute('disabled')) {
+    roomsCapacity.selectedIndex = roomsCapacity.querySelector('option:not(:checked)').value - 1;
+  }
 };
 
 var activateMap = function () {
