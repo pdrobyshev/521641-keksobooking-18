@@ -14,7 +14,10 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
 ];
-var ENTER_KEYCODE = 13;
+var keycodes = {
+  ESC: 27,
+  ENTER: 13
+};
 var isMapActive = false;
 var pinParams = {
   WIDTH: 50,
@@ -55,6 +58,9 @@ var mapPin = mapPinsList.querySelector('.map__pin--main');
 var formElements = adForm.querySelectorAll('.ad-form__element');
 var filterElements = map.querySelectorAll('.map__filter');
 var capacityOptions = roomsCapacity.querySelectorAll('option');
+var type = adForm.querySelector('#type');
+var checkIn = adForm.querySelector('#timein');
+var checkOut = adForm.querySelector('#timeout');
 
 var getRandomArrayElement = function (arr) {
   var randomIndex = Math.floor(Math.random() * arr.length);
@@ -196,6 +202,14 @@ var generateCard = function (advertisement) {
 
 var renderCard = function (cardElement) {
   mapPinsList.insertAdjacentElement('afterend', cardElement);
+
+  var popupClose = document.querySelector('.popup__close');
+  popupClose.addEventListener('click', closePopup);
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === keycodes.ESC) {
+      closePopup();
+    }
+  });
 };
 
 var toggleFormElements = function (elements, isActive) {
@@ -246,11 +260,73 @@ var advertisementsList = generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
 
 renderPins(advertisementsList);
 
-var firstAdvertisement = advertisementsList[0];
+var pinsList = document.querySelectorAll('.map__pin[type="button"]');
 
-var card = generateCard(firstAdvertisement);
+var showAdCard = function (evt) {
+  var card = document.querySelector('.map__card');
+  if (card) {
+    card.remove();
+  }
+  var pinsImagesList = document.querySelectorAll('.map__pin[type="button"] img');
+  var pinsButtons = Array.prototype.slice.call(pinsList, 0);
+  var pinsImages = Array.prototype.slice.call(pinsImagesList, 0);
 
-renderCard(card);
+  var pinButtonIndex = pinsButtons.indexOf(evt.target);
+  var pinImageIndex = pinsImages.indexOf(evt.target);
+
+  if (evt.target.matches('.map__pin[type="button"]')) {
+    renderCard(generateCard(advertisementsList[pinButtonIndex]));
+  }
+  renderCard(generateCard(advertisementsList[pinImageIndex]));
+};
+
+var closePopup = function () {
+  var card = document.querySelector('.map__card');
+  if (card) {
+    card.remove();
+  }
+};
+
+var setPrice = function () {
+  if (type.value === 'bungalo') {
+    setNewPrice('0');
+  } else if (type.value === 'flat') {
+    setNewPrice('1000');
+  } else if (type.value === 'house') {
+    setNewPrice('5000');
+  } else {
+    setNewPrice('10000');
+  }
+};
+
+var setNewPrice = function (minPrice) {
+  var price = adForm.querySelector('#price');
+  price.setAttribute('min', minPrice);
+  price.placeholder = minPrice;
+};
+
+var setCheckOutTime = function () {
+  var checkInValue = checkIn.options[checkIn.selectedIndex];
+  checkOut.value = checkInValue.value;
+};
+
+var setCheckInTime = function () {
+  var checkOutValue = checkOut.options[checkOut.selectedIndex];
+  checkIn.value = checkOutValue.value;
+};
+
+pinsList.forEach(function (pin) {
+  pin.addEventListener('click', showAdCard);
+  pin.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === keycodes.ENTER) {
+      showAdCard();
+    }
+  });
+});
+
+type.addEventListener('change', setPrice);
+checkIn.addEventListener('change', setCheckOutTime);
+checkOut.addEventListener('change', setCheckInTime);
 
 toggleFormElements(formElements, true);
 toggleFormElements(filterElements, true);
@@ -259,7 +335,7 @@ setAddress();
 
 mapPin.addEventListener('mousedown', activateMap);
 mapPin.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
+  if (evt.keyCode === keycodes.ENTER) {
     activateMap();
   }
 });
