@@ -225,11 +225,7 @@ var compareRoomsToCapacity = function () {
   });
 
   if (capacityActiveOption.hasAttribute('disabled')) {
-    for (var i = 0; i < capacityOptions.length; i++) {
-      if (!capacityOptions[i].hasAttribute('disabled')) {
-        roomsCapacity.selectedIndex = i;
-      }
-    }
+    roomsCapacity.selectedIndex = maxGuestsInRoom[roomActiveOption].includes(capacityActiveOption);
   }
 };
 
