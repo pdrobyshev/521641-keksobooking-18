@@ -51,6 +51,7 @@ var housingMinPrices = {
   house: '5000',
   palace: '10000'
 };
+var currentCard;
 
 var map = document.querySelector('.map');
 var mapPinsList = map.querySelector('.map__pins');
@@ -242,14 +243,12 @@ var generateCard = function (advertisement) {
 };
 
 var renderCard = function (cardElement) {
+  currentCard = cardElement;
   mapPinsList.insertAdjacentElement('afterend', cardElement);
 };
 
 var showAdCard = function (evt) {
-  var card = document.querySelector('.map__card');
-  if (card) {
-    card.remove();
-  }
+  closePopup(currentCard);
 
   // нахожу пины
   var pinsList = document.querySelectorAll('.map__pin[type="button"]');
