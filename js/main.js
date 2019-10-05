@@ -247,34 +247,6 @@ var renderCard = function (cardElement) {
   mapPinsList.insertAdjacentElement('afterend', cardElement);
 };
 
-var showAdCard = function (evt) {
-  closePopup(currentCard);
-
-  // нахожу пины
-  var pinsList = document.querySelectorAll('.map__pin[type="button"]');
-  // нахожу картинки внутри пинов
-  var pinsImagesList = document.querySelectorAll('.map__pin[type="button"] img');
-  // при клике на любой пин вызываем generateCard() и передаём туда массив объявлений с определённым индексом
-  // чтобы передать индекс нужно его найти
-  // чтобы метод indexOf работал - превращаю коллекции в массивы
-  var pinsButtons = Array.prototype.slice.call(pinsList, 0);
-  var pinsImages = Array.prototype.slice.call(pinsImagesList, 0);
-
-  // нахожу индекс пина или картинки, по которым был клик
-  var pinButtonIndex = pinsButtons.indexOf(evt.target);
-  var pinImageIndex = pinsImages.indexOf(evt.target);
-
-  // проверяю был ли клик по кнопке
-  if (evt.target.matches('.map__pin[type="button"]')) {
-    // генерирую карточку - передаю массив объявлений
-    // передаю в качестве индекса - индекс пина на котором был клик
-    renderCard(generateCard(advertisementsList[pinButtonIndex]));
-  }
-  // генерирую карточку - передаю массив объявлений
-  // передаю в качестве индекса - индекс картинки внутри пина на которой был клик
-  renderCard(generateCard(advertisementsList[pinImageIndex]));
-};
-
 var generatePin = function (advertisement) {
   var pin = pinTemplate.cloneNode(true);
 
@@ -283,10 +255,14 @@ var generatePin = function (advertisement) {
   pin.querySelector('img').src = advertisement.author.avatar;
   pin.querySelector('img').alt = advertisement.offer.title;
 
-  pin.addEventListener('click', showAdCard);
+  pin.addEventListener('click', function () {
+    closePopup(currentCard);
+    renderCard(generateCard(advertisement));
+  });
   pin.addEventListener('keydown', function (evt) {
     if (evt.keyCode === keycodes.ENTER) {
-      showAdCard();
+      closePopup(currentCard);
+      renderCard(generateCard(advertisement));
     }
   });
 
