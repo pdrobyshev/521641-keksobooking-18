@@ -205,7 +205,10 @@ var activateMap = function () {
   toggleFormElements(filterElements, false);
   isMapActive = true;
   setAddress();
+  setPrice();
   compareRoomsToCapacity();
+  var advertisementsList = generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
+  renderPins(advertisementsList);
   rooms.addEventListener('change', compareRoomsToCapacity);
   mapPin.removeEventListener('keydown', activateMap);
   mapPin.removeEventListener('mousedown', activateMap);
@@ -230,12 +233,10 @@ var generateCard = function (advertisement) {
   card.querySelector('.popup__avatar').setAttribute('src', advertisement.author.avatar);
 
   var popupClose = card.querySelector('.popup__close');
-  popupClose.addEventListener('click', function () {
-    closePopup(card);
-  });
+  popupClose.addEventListener('click', closePopup);
   document.addEventListener('keydown', function (evt) {
     if (evt.keyCode === keycodes.ESC) {
-      closePopup(card);
+      closePopup();
     }
   });
 
@@ -247,6 +248,11 @@ var renderCard = function (cardElement) {
   mapPinsList.insertAdjacentElement('afterend', cardElement);
 };
 
+var showAdCard = function (advertisement) {
+  closePopup();
+  renderCard(generateCard(advertisement));
+};
+
 var generatePin = function (advertisement) {
   var pin = pinTemplate.cloneNode(true);
 
@@ -256,13 +262,11 @@ var generatePin = function (advertisement) {
   pin.querySelector('img').alt = advertisement.offer.title;
 
   pin.addEventListener('click', function () {
-    closePopup(currentCard);
-    renderCard(generateCard(advertisement));
+    showAdCard(advertisement);
   });
   pin.addEventListener('keydown', function (evt) {
     if (evt.keyCode === keycodes.ENTER) {
-      closePopup(currentCard);
-      renderCard(generateCard(advertisement));
+      showAdCard(advertisement);
     }
   });
 
@@ -279,9 +283,9 @@ var renderPins = function (advertisementsList) {
   mapPinsList.appendChild(fragment);
 };
 
-var closePopup = function (card) {
-  if (card) {
-    card.remove();
+var closePopup = function () {
+  if (currentCard) {
+    currentCard.remove();
   }
 };
 
@@ -307,10 +311,6 @@ var setCheckInTime = function () {
   var checkOutValue = checkOut.options[checkOut.selectedIndex];
   checkIn.value = checkOutValue.value;
 };
-
-var advertisementsList = generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
-
-renderPins(advertisementsList);
 
 type.addEventListener('change', setPrice);
 checkIn.addEventListener('change', setCheckOutTime);
