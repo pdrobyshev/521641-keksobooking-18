@@ -54,12 +54,6 @@ var toggleFormElements = function (elements, isActive) {
   });
 };
 
-var getMapPinCoords = function () {
-  var x = pinParams.X + Math.round(mapPin.offsetWidth / 2);
-  var y = !isMapActive ? pinParams.Y + Math.round(mapPin.offsetHeight / 2) : pinParams.Y + mapPin.offsetHeight;
-  return 'x: ' + x + ' y: ' + y;
-};
-
 var setAddress = function () {
   adFormAddress.value = getMapPinCoords();
 };
@@ -77,46 +71,6 @@ var compareRoomsToCapacity = function () {
   if (capacityActiveOption.hasAttribute('disabled')) {
     roomsCapacity.selectedIndex = maxGuestsInRoom[roomActiveOption].includes(capacityActiveOption);
   }
-};
-
-var renderCard = function (cardElement) {
-  currentCard = cardElement;
-  mapPinsList.insertAdjacentElement('afterend', cardElement);
-};
-
-var showAdCard = function (advertisement) {
-  closePopup();
-  renderCard(generateCard(advertisement));
-};
-
-var generatePin = function (advertisement) {
-  var pin = pinTemplate.cloneNode(true);
-
-  pin.style.left = advertisement.location.x + 'px';
-  pin.style.top = advertisement.location.y + 'px';
-  pin.querySelector('img').src = advertisement.author.avatar;
-  pin.querySelector('img').alt = advertisement.offer.title;
-
-  pin.addEventListener('click', function () {
-    showAdCard(advertisement);
-  });
-  pin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === keycodes.ENTER) {
-      showAdCard(advertisement);
-    }
-  });
-
-  return pin;
-};
-
-var renderPins = function (advertisementsList) {
-  var fragment = document.createDocumentFragment();
-
-  advertisementsList.forEach(function (advertisement) {
-    fragment.appendChild(generatePin(advertisement));
-  });
-
-  mapPinsList.appendChild(fragment);
 };
 
 var closePopup = function () {

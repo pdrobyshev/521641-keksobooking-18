@@ -102,4 +102,10 @@
 
     return photo;
   };
+
+  var getMapPinCoords = function () {
+    var x = pinParams.X + Math.round(mapPin.offsetWidth / 2);
+    var y = !isMapActive ? pinParams.Y + Math.round(mapPin.offsetHeight / 2) : pinParams.Y + mapPin.offsetHeight;
+    return 'x: ' + x + ' y: ' + y;
+  };
 })();

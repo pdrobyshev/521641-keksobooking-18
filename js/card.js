@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var renderAdvertisementFeatures = function (advertisement) {
     var cardFeatures = document.createDocumentFragment();
@@ -43,6 +44,16 @@
         closePopup();
       }
     });
+
+    var renderCard = function (cardElement) {
+      currentCard = cardElement;
+      mapPinsList.insertAdjacentElement('afterend', cardElement);
+    };
+
+    var showAdCard = function (advertisement) {
+      closePopup();
+      renderCard(generateCard(advertisement));
+    };
 
     return card;
   };
