@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
   var generatePin = function (advertisement) {
     var pin = pinTemplate.cloneNode(true);
 
@@ -10,11 +12,11 @@
     pin.querySelector('img').alt = advertisement.offer.title;
 
     pin.addEventListener('click', function () {
-      showAdCard(advertisement);
+      window.card.showAdCard(advertisement);
     });
     pin.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === keycodes.ENTER) {
-        showAdCard(advertisement);
+      if (evt.keyCode === window.data.ENTER) {
+        window.card.showAdCard(advertisement);
       }
     });
 
@@ -28,6 +30,10 @@
       fragment.appendChild(generatePin(advertisement));
     });
 
-    mapPinsList.appendChild(fragment);
+    window.map.mapPinsList.appendChild(fragment);
+  };
+
+  window.pin = {
+    renderPins: renderPins
   };
 })();

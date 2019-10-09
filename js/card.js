@@ -1,11 +1,21 @@
 'use strict';
 
 (function () {
+  var currentCard;
+  var offerTypesTranslation = {
+    'flat': 'Квартира',
+    'bungalo': 'Бунгало',
+    'house': 'Дом',
+    'palace': 'Дворец'
+  };
+
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+
   var renderAdvertisementFeatures = function (advertisement) {
     var cardFeatures = document.createDocumentFragment();
 
     advertisement.offer.features.forEach(function (feature) {
-      cardFeatures.appendChild(generateAdvertisementFeature(feature));
+      cardFeatures.appendChild(window.data.generateAdvertisementFeature(feature));
     });
 
     return cardFeatures;
@@ -15,10 +25,16 @@
     var photos = document.createDocumentFragment();
 
     advertisement.offer.photos.forEach(function (photo) {
-      photos.appendChild(generateAdvertisementPhoto(photo));
+      photos.appendChild(window.data.generateAdvertisementPhoto(photo));
     });
 
     return photos;
+  };
+
+  var closePopup = function () {
+    if (currentCard) {
+      currentCard.remove();
+    }
   };
 
   var generateCard = function (advertisement) {
@@ -40,21 +56,25 @@
     var popupClose = card.querySelector('.popup__close');
     popupClose.addEventListener('click', closePopup);
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === keycodes.ESC) {
+      if (evt.keyCode === window.data.ESC) {
         closePopup();
       }
     });
 
-    var renderCard = function (cardElement) {
-      currentCard = cardElement;
-      mapPinsList.insertAdjacentElement('afterend', cardElement);
-    };
-
-    var showAdCard = function (advertisement) {
-      closePopup();
-      renderCard(generateCard(advertisement));
-    };
-
     return card;
+  };
+
+  var renderCard = function (cardElement) {
+    currentCard = cardElement;
+    window.map.mapPinsList.insertAdjacentElement('afterend', cardElement);
+  };
+
+  var showAdCard = function (advertisement) {
+    closePopup();
+    renderCard(generateCard(advertisement));
+  };
+
+  window.card = {
+    showAdCard: showAdCard
   };
 })();
