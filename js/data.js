@@ -20,11 +20,9 @@
   var pinParams = {
     WIDTH: 50,
     MIN_X: 0,
-    MAX_X: 1200,
-    MIN_Y: 130,
-    MAX_Y: 630,
-    X: 570,
-    Y: 375
+    MAX_X: 1167,
+    MIN_Y: 97,
+    MAX_Y: 597,
   };
   var photoParams = {
     WIDTH: 45,
@@ -115,8 +113,8 @@
   };
 
   var getMapPinCoords = function () {
-    var x = pinParams.X + Math.round(window.map.mapPin.offsetWidth / 2);
-    var y = !window.map.isMapActive ? pinParams.Y + Math.round(window.map.mapPin.offsetHeight / 2) : pinParams.Y + window.map.mapPin.offsetHeight;
+    var x = parseInt(window.map.mapPin.style.left, 10) + Math.round(window.map.mapPin.offsetWidth / 2);
+    var y = !window.map.isMapActive ? parseInt(window.map.mapPin.style.top, 10) + Math.round(window.map.mapPin.offsetHeight / 2) : parseInt(window.map.mapPin.style.left, 10) + window.map.mapPin.offsetHeight;
     return 'x: ' + x + ' y: ' + y;
   };
 
@@ -124,6 +122,7 @@
     ADVERTISEMENTS_AMOUNT: ADVERTISEMENTS_AMOUNT,
     ESC: keyCodes.ESC,
     ENTER: keyCodes.ENTER,
+    pinParams: pinParams,
     generateAdvertisementsList: generateAdvertisementsList,
     generateAdvertisementFeature: generateAdvertisementFeature,
     generateAdvertisementPhoto: generateAdvertisementPhoto,
