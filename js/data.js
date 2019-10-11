@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var ADVERTISEMENTS_AMOUNT = 8;
   var TITLES = ['Заголовок-1', 'Заголовок-2', 'Заголовок-3', 'Заголовок-4', 'Заголовок-5', 'Заголовок-6', 'Заголовок-7', 'Заголовок-8'];
   var PRICES = [1000, 3500, 12000, 1234];
   var TYPES = ['palace', 'flat', 'house', 'bungalo'];
@@ -15,8 +14,6 @@
     'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
   ];
-  // ниже идут перечисления констант. на лекции говорили, что у них свой нейминг - с большой буквы
-  // поменять или можно оставить так, а нейминг - дело кодкайда?
   var pinParams = {
     WIDTH: 50,
     MIN_X: 0,
@@ -31,51 +28,31 @@
     HEIGHT: 40,
     ALT: 'Фотография жилья'
   };
-  var keyCodes = {
-    ESC: 27,
-    ENTER: 13
-  };
-
-  var getRandomArrayElement = function (arr) {
-    var randomIndex = Math.floor(Math.random() * arr.length);
-
-    return arr[randomIndex];
-  };
-
-  var getRandomArrayPart = function (arr) {
-    var randomIndex = Math.floor(Math.random() * arr.length + 1);
-
-    return arr.slice(0, randomIndex);
-  };
-
-  var getRandomIntegerInRange = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
 
   var getAvatarPath = function (index) {
     return index < 9 ? 'img/avatars/user0' + (index + 1) + '.png' : 'img/avatars/user' + (index + 1) + '.png';
   };
 
   var generateAdvertisement = function (i) {
-    var coordX = getRandomIntegerInRange(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH);
-    var coordY = getRandomIntegerInRange(pinParams.MIN_Y, pinParams.MAX_Y);
+    var coordX = window.util.getRandomIntegerInRange(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH);
+    var coordY = window.util.getRandomIntegerInRange(pinParams.MIN_Y, pinParams.MAX_Y);
 
     return {
       author: {
         avatar: getAvatarPath(i),
       },
       offer: {
-        title: getRandomArrayElement(TITLES),
+        title: window.util.getRandomArrayElement(TITLES),
         address: coordX + ', ' + coordY,
-        price: getRandomArrayElement(PRICES),
-        type: getRandomArrayElement(TYPES),
-        rooms: getRandomArrayElement(ROOMS),
-        guests: getRandomArrayElement(GUESTS),
-        checkin: getRandomArrayElement(HOURS),
-        checkout: getRandomArrayElement(HOURS),
-        features: getRandomArrayPart(FEATURES),
-        description: getRandomArrayElement(DESCRIPTIONS),
-        photos: getRandomArrayPart(PHOTOS),
+        price: window.util.getRandomArrayElement(PRICES),
+        type: window.util.getRandomArrayElement(TYPES),
+        rooms: window.util.getRandomArrayElement(ROOMS),
+        guests: window.util.getRandomArrayElement(GUESTS),
+        checkin: window.util.getRandomArrayElement(HOURS),
+        checkout: window.util.getRandomArrayElement(HOURS),
+        features: window.util.getRandomArrayPart(FEATURES),
+        description: window.util.getRandomArrayElement(DESCRIPTIONS),
+        photos: window.util.getRandomArrayPart(PHOTOS),
       },
       location: {
         x: coordX,
@@ -121,9 +98,6 @@
   };
 
   window.data = {
-    ADVERTISEMENTS_AMOUNT: ADVERTISEMENTS_AMOUNT,
-    ESC: keyCodes.ESC,
-    ENTER: keyCodes.ENTER,
     generateAdvertisementsList: generateAdvertisementsList,
     generateAdvertisementFeature: generateAdvertisementFeature,
     generateAdvertisementPhoto: generateAdvertisementPhoto,

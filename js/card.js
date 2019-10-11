@@ -31,7 +31,7 @@
     return photos;
   };
 
-  var closePopup = function () {
+  var popupCloseHandler = function () {
     if (currentCard) {
       currentCard.remove();
     }
@@ -54,11 +54,9 @@
     card.querySelector('.popup__avatar').setAttribute('src', advertisement.author.avatar);
 
     var popupClose = card.querySelector('.popup__close');
-    popupClose.addEventListener('click', closePopup);
+    popupClose.addEventListener('click', popupCloseHandler);
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.data.ESC) {
-        closePopup();
-      }
+      window.util.isEscEvent(evt, popupCloseHandler);
     });
 
     return card;
@@ -70,11 +68,11 @@
   };
 
   var showAdCard = function (advertisement) {
-    closePopup();
+    popupCloseHandler();
     renderCard(generateCard(advertisement));
   };
 
   window.card = {
-    showAdCard: showAdCard
+    showAd: showAdCard
   };
 })();

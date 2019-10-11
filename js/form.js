@@ -89,7 +89,7 @@
     rooms: rooms,
     formElements: formElements,
     filterElements: filterElements,
-    toggleFormElements: toggleFormElements,
+    toggleElements: toggleFormElements,
     setAddress: setAddress,
     setPrice: setPrice,
     compareRoomsToCapacity: compareRoomsToCapacity
