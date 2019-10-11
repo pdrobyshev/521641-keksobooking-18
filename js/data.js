@@ -19,9 +19,7 @@
     MIN_X: 0,
     MAX_X: 1200,
     MIN_Y: 130,
-    MAX_Y: 630,
-    X: 570,
-    Y: 375
+    MAX_Y: 630
   };
   var photoParams = {
     WIDTH: 45,
@@ -91,16 +89,9 @@
     return photo;
   };
 
-  var getMapPinCoords = function () {
-    var x = pinParams.X + Math.round(window.map.mapPin.offsetWidth / 2);
-    var y = !window.map.isMapActive ? pinParams.Y + Math.round(window.map.mapPin.offsetHeight / 2) : pinParams.Y + window.map.mapPin.offsetHeight;
-    return 'x: ' + x + ' y: ' + y;
-  };
-
   window.data = {
     generateAdvertisementsList: generateAdvertisementsList,
     generateAdvertisementFeature: generateAdvertisementFeature,
-    generateAdvertisementPhoto: generateAdvertisementPhoto,
-    getMapPinCoords: getMapPinCoords
+    generateAdvertisementPhoto: generateAdvertisementPhoto
   };
 })();

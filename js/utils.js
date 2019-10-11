@@ -29,6 +29,11 @@
     },
     getRandomIntegerInRange: function (min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
+    toggleFormElements: function (elements, isActive) {
+      Array.prototype.forEach.call(elements, function (element) {
+        element.disabled = isActive;
+      });
     }
   };
 })();

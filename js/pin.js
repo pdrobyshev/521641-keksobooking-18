@@ -28,7 +28,7 @@
       fragment.appendChild(generatePin(advertisement));
     });
 
-    window.map.mapPinsList.appendChild(fragment);
+    return fragment;
   };
 
   window.pin = {

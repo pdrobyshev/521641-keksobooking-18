@@ -14,30 +14,22 @@
     palace: '10000'
   };
 
-  var adForm = document.querySelector('.ad-form');
-  var formElements = adForm.querySelectorAll('.ad-form__element');
-  var rooms = adForm.querySelector('#room_number');
-  var roomsCapacity = adForm.querySelector('#capacity');
+  var roomsCapacity = document.querySelector('#capacity');
   var capacityOptions = roomsCapacity.querySelectorAll('option');
-  var adFormAddress = adForm.querySelector('input[name="address"]');
-  var price = adForm.querySelector('#price');
-  var type = adForm.querySelector('#type');
-  var typeOptions = adForm.querySelectorAll('#type option');
-  var checkIn = adForm.querySelector('#timein');
-  var checkOut = adForm.querySelector('#timeout');
-  var filterElements = window.map.map.querySelectorAll('.map__filter');
-
-  var toggleFormElements = function (elements, isActive) {
-    Array.prototype.forEach.call(elements, function (element) {
-      element.disabled = isActive;
-    });
-  };
+  var adFormAddress = document.querySelector('input[name="address"]');
+  var price = document.querySelector('#price');
+  var type = document.querySelector('#type');
+  var typeOptions = document.querySelectorAll('#type option');
+  var checkIn = document.querySelector('#timein');
+  var checkOut = document.querySelector('#timeout');
 
   var setAddress = function () {
-    adFormAddress.value = window.data.getMapPinCoords();
+    adFormAddress.value = window.map.getPinCoords();
   };
 
   var compareRoomsToCapacity = function () {
+    var rooms = document.querySelector('#room_number');
+
     var roomActiveOption = rooms.value;
     var capacityActiveOption = roomsCapacity.options[roomsCapacity.selectedIndex];
 
@@ -75,9 +67,6 @@
     checkIn.value = checkOutValue.value;
   };
 
-  toggleFormElements(formElements, true);
-  toggleFormElements(filterElements, true);
-
   setAddress();
 
   type.addEventListener('change', setPrice);
@@ -85,11 +74,6 @@
   checkOut.addEventListener('change', setCheckInTime);
 
   window.form = {
-    adForm: adForm,
-    rooms: rooms,
-    formElements: formElements,
-    filterElements: filterElements,
-    toggleElements: toggleFormElements,
     setAddress: setAddress,
     setPrice: setPrice,
     compareRoomsToCapacity: compareRoomsToCapacity
