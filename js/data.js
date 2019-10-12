@@ -32,25 +32,25 @@
   };
 
   var generateAdvertisement = function (i) {
-    var coordX = window.util.getRandomIntegerInRange(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH);
-    var coordY = window.util.getRandomIntegerInRange(pinParams.MIN_Y, pinParams.MAX_Y);
+    var coordX = window.utils.getRandomIntegerInRange(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH);
+    var coordY = window.utils.getRandomIntegerInRange(pinParams.MIN_Y, pinParams.MAX_Y);
 
     return {
       author: {
         avatar: getAvatarPath(i),
       },
       offer: {
-        title: window.util.getRandomArrayElement(TITLES),
+        title: window.utils.getRandomArrayElement(TITLES),
         address: coordX + ', ' + coordY,
-        price: window.util.getRandomArrayElement(PRICES),
-        type: window.util.getRandomArrayElement(TYPES),
-        rooms: window.util.getRandomArrayElement(ROOMS),
-        guests: window.util.getRandomArrayElement(GUESTS),
-        checkin: window.util.getRandomArrayElement(HOURS),
-        checkout: window.util.getRandomArrayElement(HOURS),
-        features: window.util.getRandomArrayPart(FEATURES),
-        description: window.util.getRandomArrayElement(DESCRIPTIONS),
-        photos: window.util.getRandomArrayPart(PHOTOS),
+        price: window.utils.getRandomArrayElement(PRICES),
+        type: window.utils.getRandomArrayElement(TYPES),
+        rooms: window.utils.getRandomArrayElement(ROOMS),
+        guests: window.utils.getRandomArrayElement(GUESTS),
+        checkin: window.utils.getRandomArrayElement(HOURS),
+        checkout: window.utils.getRandomArrayElement(HOURS),
+        features: window.utils.getRandomArrayPart(FEATURES),
+        description: window.utils.getRandomArrayElement(DESCRIPTIONS),
+        photos: window.utils.getRandomArrayPart(PHOTOS),
       },
       location: {
         x: coordX,

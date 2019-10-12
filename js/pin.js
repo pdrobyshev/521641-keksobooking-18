@@ -12,10 +12,10 @@
     pin.querySelector('img').alt = advertisement.offer.title;
 
     pin.addEventListener('click', function () {
-      window.card.showAd(advertisement);
+      window.card.show(advertisement);
     });
     pin.addEventListener('keydown', function (evt) {
-      window.util.isEnterEvent(evt, window.card.showAd, advertisement);
+      window.utils.isEnterEvent(evt, window.card.show, advertisement);
     });
 
     return pin;

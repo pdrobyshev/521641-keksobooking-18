@@ -14,9 +14,10 @@
     palace: '10000'
   };
 
+  var adFormAddress = document.querySelector('input[name="address"]');
+  var rooms = document.querySelector('#room_number');
   var roomsCapacity = document.querySelector('#capacity');
   var capacityOptions = roomsCapacity.querySelectorAll('option');
-  var adFormAddress = document.querySelector('input[name="address"]');
   var price = document.querySelector('#price');
   var type = document.querySelector('#type');
   var typeOptions = document.querySelectorAll('#type option');
@@ -28,8 +29,6 @@
   };
 
   var compareRoomsToCapacity = function () {
-    var rooms = document.querySelector('#room_number');
-
     var roomActiveOption = rooms.value;
     var capacityActiveOption = roomsCapacity.options[roomsCapacity.selectedIndex];
 
@@ -67,15 +66,20 @@
     checkIn.value = checkOutValue.value;
   };
 
+  var activate = function () {
+    setAddress();
+    setPrice();
+    compareRoomsToCapacity();
+  };
+
   setAddress();
 
   type.addEventListener('change', setPrice);
   checkIn.addEventListener('change', setCheckOutTime);
   checkOut.addEventListener('change', setCheckInTime);
+  rooms.addEventListener('change', compareRoomsToCapacity);
 
   window.form = {
-    setAddress: setAddress,
-    setPrice: setPrice,
-    compareRoomsToCapacity: compareRoomsToCapacity
+    activate: activate
   };
 })();

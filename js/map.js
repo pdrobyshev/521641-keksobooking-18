@@ -7,28 +7,29 @@
     X: 570,
     Y: 375
   };
+
   var map = document.querySelector('.map');
   var mapPinsList = map.querySelector('.map__pins');
   var mapPin = mapPinsList.querySelector('.map__pin--main');
   var formElements = document.querySelectorAll('.ad-form__element');
   var filterElements = document.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
-  var rooms = document.querySelector('#room_number');
 
   var activateMap = function () {
-    window.util.toggleFormElements(formElements, false);
-    window.util.toggleFormElements(filterElements, false);
     isMapActive = true;
-    window.form.setAddress();
-    window.form.setPrice();
-    window.form.compareRoomsToCapacity();
-    var advertisementsList = window.data.generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
-    mapPinsList.appendChild(window.pin.renderAll(advertisementsList, mapPinsList));
-    rooms.addEventListener('change', window.form.compareRoomsToCapacity);
+
+    window.utils.toggleFormElements(formElements, false);
+    window.utils.toggleFormElements(filterElements, false);
+    window.form.activate();
+
     mapPin.removeEventListener('keydown', activateMap);
     mapPin.removeEventListener('mousedown', activateMap);
+
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
+
+    var advertisementsList = window.data.generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
+    mapPinsList.appendChild(window.pin.renderAll(advertisementsList, mapPinsList));
   };
 
   var getMapPinCoords = function () {
@@ -37,12 +38,12 @@
     return 'x: ' + x + ' y: ' + y;
   };
 
-  window.util.toggleFormElements(formElements, true);
-  window.util.toggleFormElements(filterElements, true);
+  window.utils.toggleFormElements(formElements, true);
+  window.utils.toggleFormElements(filterElements, true);
 
   mapPin.addEventListener('mousedown', activateMap);
   mapPin.addEventListener('keydown', function (evt) {
-    window.util.isEnterEvent(evt, activateMap);
+    window.utils.isEnterEvent(evt, activateMap);
   });
 
   window.map = {
