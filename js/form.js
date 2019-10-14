@@ -14,27 +14,18 @@
     palace: '10000'
   };
 
-  var adForm = document.querySelector('.ad-form');
-  var formElements = adForm.querySelectorAll('.ad-form__element');
-  var rooms = adForm.querySelector('#room_number');
-  var roomsCapacity = adForm.querySelector('#capacity');
+  var adFormAddress = document.querySelector('input[name="address"]');
+  var rooms = document.querySelector('#room_number');
+  var roomsCapacity = document.querySelector('#capacity');
   var capacityOptions = roomsCapacity.querySelectorAll('option');
-  var adFormAddress = adForm.querySelector('input[name="address"]');
-  var price = adForm.querySelector('#price');
-  var type = adForm.querySelector('#type');
-  var typeOptions = adForm.querySelectorAll('#type option');
-  var checkIn = adForm.querySelector('#timein');
-  var checkOut = adForm.querySelector('#timeout');
-  var filterElements = window.map.map.querySelectorAll('.map__filter');
-
-  var toggleFormElements = function (elements, isActive) {
-    Array.prototype.forEach.call(elements, function (element) {
-      element.disabled = isActive;
-    });
-  };
+  var price = document.querySelector('#price');
+  var type = document.querySelector('#type');
+  var typeOptions = document.querySelectorAll('#type option');
+  var checkIn = document.querySelector('#timein');
+  var checkOut = document.querySelector('#timeout');
 
   var setAddress = function () {
-    adFormAddress.value = window.data.getMapPinCoords();
+    adFormAddress.value = window.map.getPinCoords();
   };
 
   var compareRoomsToCapacity = function () {
@@ -75,23 +66,20 @@
     checkIn.value = checkOutValue.value;
   };
 
-  toggleFormElements(formElements, true);
-  toggleFormElements(filterElements, true);
+  var activate = function () {
+    setAddress();
+    setPrice();
+    compareRoomsToCapacity();
+  };
 
   setAddress();
 
   type.addEventListener('change', setPrice);
   checkIn.addEventListener('change', setCheckOutTime);
   checkOut.addEventListener('change', setCheckInTime);
+  rooms.addEventListener('change', compareRoomsToCapacity);
 
   window.form = {
-    adForm: adForm,
-    rooms: rooms,
-    formElements: formElements,
-    filterElements: filterElements,
-    toggleFormElements: toggleFormElements,
-    setAddress: setAddress,
-    setPrice: setPrice,
-    compareRoomsToCapacity: compareRoomsToCapacity
+    activate: activate
   };
 })();

@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var ADVERTISEMENTS_AMOUNT = 8;
   var TITLES = ['Заголовок-1', 'Заголовок-2', 'Заголовок-3', 'Заголовок-4', 'Заголовок-5', 'Заголовок-6', 'Заголовок-7', 'Заголовок-8'];
   var PRICES = [1000, 3500, 12000, 1234];
   var TYPES = ['palace', 'flat', 'house', 'bungalo'];
@@ -15,39 +14,12 @@
     'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
   ];
-  // ниже идут перечисления констант. на лекции говорили, что у них свой нейминг - с большой буквы
-  // поменять или можно оставить так, а нейминг - дело кодкайда?
   var pinParams = {
     WIDTH: 50,
     MIN_X: 0,
-    MAX_X: 1167,
-    MIN_Y: 97,
-    MAX_Y: 597,
-  };
-  var photoParams = {
-    WIDTH: 45,
-    HEIGHT: 40,
-    ALT: 'Фотография жилья'
-  };
-  var keyCodes = {
-    ESC: 27,
-    ENTER: 13
-  };
-
-  var getRandomArrayElement = function (arr) {
-    var randomIndex = Math.floor(Math.random() * arr.length);
-
-    return arr[randomIndex];
-  };
-
-  var getRandomArrayPart = function (arr) {
-    var randomIndex = Math.floor(Math.random() * arr.length + 1);
-
-    return arr.slice(0, randomIndex);
-  };
-
-  var getRandomIntegerInRange = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    MAX_X: 1200,
+    MIN_Y: 130,
+    MAX_Y: 630
   };
 
   var getAvatarPath = function (index) {
@@ -55,25 +27,25 @@
   };
 
   var generateAdvertisement = function (i) {
-    var coordX = getRandomIntegerInRange(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH);
-    var coordY = getRandomIntegerInRange(pinParams.MIN_Y, pinParams.MAX_Y);
+    var coordX = window.utils.getRandomIntegerInRange(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH);
+    var coordY = window.utils.getRandomIntegerInRange(pinParams.MIN_Y, pinParams.MAX_Y);
 
     return {
       author: {
         avatar: getAvatarPath(i),
       },
       offer: {
-        title: getRandomArrayElement(TITLES),
+        title: window.utils.getRandomArrayElement(TITLES),
         address: coordX + ', ' + coordY,
-        price: getRandomArrayElement(PRICES),
-        type: getRandomArrayElement(TYPES),
-        rooms: getRandomArrayElement(ROOMS),
-        guests: getRandomArrayElement(GUESTS),
-        checkin: getRandomArrayElement(HOURS),
-        checkout: getRandomArrayElement(HOURS),
-        features: getRandomArrayPart(FEATURES),
-        description: getRandomArrayElement(DESCRIPTIONS),
-        photos: getRandomArrayPart(PHOTOS),
+        price: window.utils.getRandomArrayElement(PRICES),
+        type: window.utils.getRandomArrayElement(TYPES),
+        rooms: window.utils.getRandomArrayElement(ROOMS),
+        guests: window.utils.getRandomArrayElement(GUESTS),
+        checkin: window.utils.getRandomArrayElement(HOURS),
+        checkout: window.utils.getRandomArrayElement(HOURS),
+        features: window.utils.getRandomArrayPart(FEATURES),
+        description: window.utils.getRandomArrayElement(DESCRIPTIONS),
+        photos: window.utils.getRandomArrayPart(PHOTOS),
       },
       location: {
         x: coordX,
@@ -82,50 +54,7 @@
     };
   };
 
-  var generateAdvertisementsList = function (amount) {
-    var advertisementsList = [];
-
-    for (var i = 0; i < amount; i++) {
-      var advertisement = generateAdvertisement(i);
-
-      advertisementsList.push(advertisement);
-    }
-
-    return advertisementsList;
-  };
-
-  var generateAdvertisementFeature = function (feature) {
-    var cardFeature = document.createElement('li');
-    cardFeature.className = 'popup__feature popup__feature--' + feature;
-
-    return cardFeature;
-  };
-
-  var generateAdvertisementPhoto = function (src) {
-    var photo = document.createElement('img');
-    photo.className = 'popup__photo';
-    photo.setAttribute('src', src);
-    photo.setAttribute('width', photoParams.WIDTH);
-    photo.setAttribute('height', photoParams.HEIGHT);
-    photo.setAttribute('alt', photoParams.ALT);
-
-    return photo;
-  };
-
-  var getMapPinCoords = function () {
-    var x = parseInt(window.map.mapPin.style.left, 10) + Math.round(window.map.mapPin.offsetWidth / 2);
-    var y = !window.map.isMapActive ? parseInt(window.map.mapPin.style.top, 10) + Math.round(window.map.mapPin.offsetHeight / 2) : parseInt(window.map.mapPin.style.left, 10) + window.map.mapPin.offsetHeight;
-    return 'x: ' + x + ' y: ' + y;
-  };
-
   window.data = {
-    ADVERTISEMENTS_AMOUNT: ADVERTISEMENTS_AMOUNT,
-    ESC: keyCodes.ESC,
-    ENTER: keyCodes.ENTER,
-    pinParams: pinParams,
-    generateAdvertisementsList: generateAdvertisementsList,
-    generateAdvertisementFeature: generateAdvertisementFeature,
-    generateAdvertisementPhoto: generateAdvertisementPhoto,
-    getMapPinCoords: getMapPinCoords
+    generateAdvertisement: generateAdvertisement
   };
 })();

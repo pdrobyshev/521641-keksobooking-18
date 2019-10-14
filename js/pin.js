@@ -12,12 +12,10 @@
     pin.querySelector('img').alt = advertisement.offer.title;
 
     pin.addEventListener('click', function () {
-      window.card.showAdCard(advertisement);
+      window.card.show(advertisement);
     });
     pin.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.data.ENTER) {
-        window.card.showAdCard(advertisement);
-      }
+      window.utils.isEnterEvent(evt, window.card.show, advertisement);
     });
 
     return pin;
@@ -30,10 +28,10 @@
       fragment.appendChild(generatePin(advertisement));
     });
 
-    window.map.mapPinsList.appendChild(fragment);
+    return fragment;
   };
 
   window.pin = {
-    renderPins: renderPins
+    render: renderPins
   };
 })();

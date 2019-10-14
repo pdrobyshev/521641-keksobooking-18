@@ -8,14 +8,38 @@
     'house': 'Дом',
     'palace': 'Дворец'
   };
+  var photoParams = {
+    WIDTH: 45,
+    HEIGHT: 40,
+    ALT: 'Фотография жилья'
+  };
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var map = document.querySelector('.map');
+
+  var generateAdvertisementFeature = function (feature) {
+    var cardFeature = document.createElement('li');
+    cardFeature.className = 'popup__feature popup__feature--' + feature;
+
+    return cardFeature;
+  };
+
+  var generateAdvertisementPhoto = function (src) {
+    var photo = document.createElement('img');
+    photo.className = 'popup__photo';
+    photo.setAttribute('src', src);
+    photo.setAttribute('width', photoParams.WIDTH);
+    photo.setAttribute('height', photoParams.HEIGHT);
+    photo.setAttribute('alt', photoParams.ALT);
+
+    return photo;
+  };
 
   var renderAdvertisementFeatures = function (advertisement) {
     var cardFeatures = document.createDocumentFragment();
 
     advertisement.offer.features.forEach(function (feature) {
-      cardFeatures.appendChild(window.data.generateAdvertisementFeature(feature));
+      cardFeatures.appendChild(generateAdvertisementFeature(feature));
     });
 
     return cardFeatures;
@@ -25,13 +49,13 @@
     var photos = document.createDocumentFragment();
 
     advertisement.offer.photos.forEach(function (photo) {
-      photos.appendChild(window.data.generateAdvertisementPhoto(photo));
+      photos.appendChild(generateAdvertisementPhoto(photo));
     });
 
     return photos;
   };
 
-  var closePopup = function () {
+  var popupCloseHandler = function () {
     if (currentCard) {
       currentCard.remove();
     }
@@ -54,11 +78,9 @@
     card.querySelector('.popup__avatar').setAttribute('src', advertisement.author.avatar);
 
     var popupClose = card.querySelector('.popup__close');
-    popupClose.addEventListener('click', closePopup);
+    popupClose.addEventListener('click', popupCloseHandler);
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.data.ESC) {
-        closePopup();
-      }
+      window.utils.isEscEvent(evt, popupCloseHandler);
     });
 
     return card;
@@ -66,15 +88,15 @@
 
   var renderCard = function (cardElement) {
     currentCard = cardElement;
-    window.map.mapPinsList.insertAdjacentElement('afterend', cardElement);
+    map.insertAdjacentElement('afterbegin', cardElement);
   };
 
   var showAdCard = function (advertisement) {
-    closePopup();
+    popupCloseHandler();
     renderCard(generateCard(advertisement));
   };
 
   window.card = {
-    showAdCard: showAdCard
+    show: showAdCard
   };
 })();
