@@ -15,18 +15,7 @@
   };
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-
-  var generateAdvertisementsList = function (amount) {
-    var advertisementsList = [];
-
-    for (var i = 0; i < amount; i++) {
-      var advertisement = window.data.generateAdvertisement(i);
-
-      advertisementsList.push(advertisement);
-    }
-
-    return advertisementsList;
-  };
+  var map = document.querySelector('.map');
 
   var generateAdvertisementFeature = function (feature) {
     var cardFeature = document.createElement('li');
@@ -99,10 +88,7 @@
 
   var renderCard = function (cardElement) {
     currentCard = cardElement;
-    // не могу понять, как избавиться от иморта ноды mapPinsList
-    // я ведь не вставляю карточку явно, а делаю это через слушателя событий, который вешаю в модуле pin
-    // поэтому в модуле map не могу явно указать к какому элементу надо аппендить
-    window.map.mapPinsList.insertAdjacentElement('afterend', cardElement);
+    map.insertAdjacentElement('afterbegin', cardElement);
   };
 
   var showAdCard = function (advertisement) {
@@ -111,7 +97,6 @@
   };
 
   window.card = {
-    generateAdvertisementsList: generateAdvertisementsList,
     show: showAdCard
   };
 })();

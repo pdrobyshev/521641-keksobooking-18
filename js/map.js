@@ -15,6 +15,18 @@
   var filterElements = document.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
 
+  var generateAdvertisementsList = function (amount) {
+    var advertisementsList = [];
+
+    for (var i = 0; i < amount; i++) {
+      var advertisement = window.data.generateAdvertisement(i);
+
+      advertisementsList.push(advertisement);
+    }
+
+    return advertisementsList;
+  };
+
   var activateMap = function () {
     isMapActive = true;
 
@@ -28,7 +40,7 @@
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
 
-    var advertisementsList = window.card.generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
+    var advertisementsList = generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
     mapPinsList.appendChild(window.pin.render(advertisementsList, mapPinsList));
   };
 
@@ -47,7 +59,6 @@
   });
 
   window.map = {
-    mapPinsList: mapPinsList,
     getPinCoords: getMapPinCoords
   };
 })();
