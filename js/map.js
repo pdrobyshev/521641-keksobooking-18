@@ -28,8 +28,8 @@
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
 
-    var advertisementsList = window.data.generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
-    mapPinsList.appendChild(window.pin.renderAll(advertisementsList, mapPinsList));
+    var advertisementsList = window.card.generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
+    mapPinsList.appendChild(window.pin.render(advertisementsList, mapPinsList));
   };
 
   var getMapPinCoords = function () {

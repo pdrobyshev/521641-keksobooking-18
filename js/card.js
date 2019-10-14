@@ -8,14 +8,49 @@
     'house': 'Дом',
     'palace': 'Дворец'
   };
+  var photoParams = {
+    WIDTH: 45,
+    HEIGHT: 40,
+    ALT: 'Фотография жилья'
+  };
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+
+  var generateAdvertisementsList = function (amount) {
+    var advertisementsList = [];
+
+    for (var i = 0; i < amount; i++) {
+      var advertisement = window.data.generateAdvertisement(i);
+
+      advertisementsList.push(advertisement);
+    }
+
+    return advertisementsList;
+  };
+
+  var generateAdvertisementFeature = function (feature) {
+    var cardFeature = document.createElement('li');
+    cardFeature.className = 'popup__feature popup__feature--' + feature;
+
+    return cardFeature;
+  };
+
+  var generateAdvertisementPhoto = function (src) {
+    var photo = document.createElement('img');
+    photo.className = 'popup__photo';
+    photo.setAttribute('src', src);
+    photo.setAttribute('width', photoParams.WIDTH);
+    photo.setAttribute('height', photoParams.HEIGHT);
+    photo.setAttribute('alt', photoParams.ALT);
+
+    return photo;
+  };
 
   var renderAdvertisementFeatures = function (advertisement) {
     var cardFeatures = document.createDocumentFragment();
 
     advertisement.offer.features.forEach(function (feature) {
-      cardFeatures.appendChild(window.data.generateAdvertisementFeature(feature));
+      cardFeatures.appendChild(generateAdvertisementFeature(feature));
     });
 
     return cardFeatures;
@@ -25,7 +60,7 @@
     var photos = document.createDocumentFragment();
 
     advertisement.offer.photos.forEach(function (photo) {
-      photos.appendChild(window.data.generateAdvertisementPhoto(photo));
+      photos.appendChild(generateAdvertisementPhoto(photo));
     });
 
     return photos;
@@ -64,6 +99,9 @@
 
   var renderCard = function (cardElement) {
     currentCard = cardElement;
+    // не могу понять, как избавиться от иморта ноды mapPinsList
+    // я ведь не вставляю карточку явно, а делаю это через слушателя событий, который вешаю в модуле pin
+    // поэтому в модуле map не могу явно указать к какому элементу надо аппендить
     window.map.mapPinsList.insertAdjacentElement('afterend', cardElement);
   };
 
@@ -73,6 +111,7 @@
   };
 
   window.card = {
+    generateAdvertisementsList: generateAdvertisementsList,
     show: showAdCard
   };
 })();

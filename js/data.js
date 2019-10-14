@@ -21,11 +21,6 @@
     MIN_Y: 130,
     MAX_Y: 630
   };
-  var photoParams = {
-    WIDTH: 45,
-    HEIGHT: 40,
-    ALT: 'Фотография жилья'
-  };
 
   var getAvatarPath = function (index) {
     return index < 9 ? 'img/avatars/user0' + (index + 1) + '.png' : 'img/avatars/user' + (index + 1) + '.png';
@@ -59,39 +54,7 @@
     };
   };
 
-  var generateAdvertisementsList = function (amount) {
-    var advertisementsList = [];
-
-    for (var i = 0; i < amount; i++) {
-      var advertisement = generateAdvertisement(i);
-
-      advertisementsList.push(advertisement);
-    }
-
-    return advertisementsList;
-  };
-
-  var generateAdvertisementFeature = function (feature) {
-    var cardFeature = document.createElement('li');
-    cardFeature.className = 'popup__feature popup__feature--' + feature;
-
-    return cardFeature;
-  };
-
-  var generateAdvertisementPhoto = function (src) {
-    var photo = document.createElement('img');
-    photo.className = 'popup__photo';
-    photo.setAttribute('src', src);
-    photo.setAttribute('width', photoParams.WIDTH);
-    photo.setAttribute('height', photoParams.HEIGHT);
-    photo.setAttribute('alt', photoParams.ALT);
-
-    return photo;
-  };
-
   window.data = {
-    generateAdvertisementsList: generateAdvertisementsList,
-    generateAdvertisementFeature: generateAdvertisementFeature,
-    generateAdvertisementPhoto: generateAdvertisementPhoto
+    generateAdvertisement: generateAdvertisement
   };
 })();
