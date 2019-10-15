@@ -11,6 +11,7 @@
     MIN_Y: 130,
     MAX_Y: 630,
   };
+  var PIN_HEIGHT = 81;
 
   var map = document.querySelector('.map');
   var mapPinsList = map.querySelector('.map__pins');
@@ -53,7 +54,7 @@
     var pinStyleTop = parseInt(mapPin.style.top, 10);
 
     var x = pinStyleLeft + Math.round(mapPin.offsetWidth / 2);
-    var y = !isMapActive ? pinStyleTop + Math.round(mapPin.offsetHeight / 2) : pinStyleTop;
+    var y = !isMapActive ? pinStyleTop + Math.round(mapPin.offsetHeight / 2) : pinStyleTop + PIN_HEIGHT;
     return 'x: ' + x + ' y: ' + y;
   };
 
@@ -93,10 +94,10 @@
       var pinStyleTop = parseInt(mapPin.style.top, 10);
       var pinStyleLeft = parseInt(mapPin.style.left, 10);
 
-      if (pinStyleTop < pinCoords.MIN_Y) {
-        mapPin.style.top = pinCoords.MIN_Y + 'px';
-      } else if (pinStyleTop > pinCoords.MAX_Y) {
-        mapPin.style.top = pinCoords.MAX_Y + 'px';
+      if (pinStyleTop < pinCoords.MIN_Y - PIN_HEIGHT) {
+        mapPin.style.top = pinCoords.MIN_Y - PIN_HEIGHT + 'px';
+      } else if (pinStyleTop > pinCoords.MAX_Y - PIN_HEIGHT) {
+        mapPin.style.top = pinCoords.MAX_Y - PIN_HEIGHT + 'px';
       }
 
       if (pinStyleLeft < pinCoords.MIN_X) {
