@@ -1,11 +1,12 @@
 'use strict';
 
 (function () {
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinParams = {
     WIDTH: 50,
     HEIGHT: 70
   };
+
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var generatePin = function (advertisement) {
     var pin = pinTemplate.cloneNode(true);
