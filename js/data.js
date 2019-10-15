@@ -27,7 +27,7 @@
   };
 
   var generateAdvertisement = function (i) {
-    var coordX = window.utils.getRandomIntegerInRange(pinParams.MIN_X, pinParams.MAX_X - pinParams.WIDTH);
+    var coordX = window.utils.getRandomIntegerInRange(pinParams.MIN_X, pinParams.MAX_X);
     var coordY = window.utils.getRandomIntegerInRange(pinParams.MIN_Y, pinParams.MAX_Y);
 
     return {
