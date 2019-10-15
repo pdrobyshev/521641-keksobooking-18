@@ -80,6 +80,7 @@
   rooms.addEventListener('change', compareRoomsToCapacity);
 
   window.form = {
+    setAddress: setAddress,
     activate: activate
   };
 })();

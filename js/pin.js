@@ -1,13 +1,18 @@
 'use strict';
 
 (function () {
+  var pinParams = {
+    WIDTH: 50,
+    HEIGHT: 70
+  };
+
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var generatePin = function (advertisement) {
     var pin = pinTemplate.cloneNode(true);
 
-    pin.style.left = advertisement.location.x + 'px';
-    pin.style.top = advertisement.location.y + 'px';
+    pin.style.left = advertisement.location.x - pinParams.WIDTH / 2 + 'px';
+    pin.style.top = advertisement.location.y - pinParams.HEIGHT + 'px';
     pin.querySelector('img').src = advertisement.author.avatar;
     pin.querySelector('img').alt = advertisement.offer.title;
 
