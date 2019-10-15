@@ -7,11 +7,15 @@
     X: 570,
     Y: 375,
     MIN_X: 0,
-    MAX_X: 1167,
+    MAX_X: 1200,
     MIN_Y: 130,
     MAX_Y: 630,
   };
-  var PIN_HEIGHT = 81;
+  var mainPinParams = {
+    HALF_WIDTH: 33,
+    HALF_HEIGHT: 33,
+    HEIGHT: 81
+  };
 
   var map = document.querySelector('.map');
   var mapPinsList = map.querySelector('.map__pins');
@@ -53,8 +57,8 @@
     var pinStyleLeft = parseInt(mapPin.style.left, 10);
     var pinStyleTop = parseInt(mapPin.style.top, 10);
 
-    var x = pinStyleLeft + Math.round(mapPin.offsetWidth / 2);
-    var y = !isMapActive ? pinStyleTop + Math.round(mapPin.offsetHeight / 2) : pinStyleTop + PIN_HEIGHT;
+    var x = pinStyleLeft + mainPinParams.HALF_WIDTH;
+    var y = !isMapActive ? pinStyleTop + mainPinParams.HALF_HEIGHT : pinStyleTop + mainPinParams.HEIGHT;
     return 'x: ' + x + ' y: ' + y;
   };
 
@@ -94,16 +98,16 @@
       var pinStyleTop = parseInt(mapPin.style.top, 10);
       var pinStyleLeft = parseInt(mapPin.style.left, 10);
 
-      if (pinStyleTop < pinCoords.MIN_Y - PIN_HEIGHT) {
-        mapPin.style.top = pinCoords.MIN_Y - PIN_HEIGHT + 'px';
-      } else if (pinStyleTop > pinCoords.MAX_Y - PIN_HEIGHT) {
-        mapPin.style.top = pinCoords.MAX_Y - PIN_HEIGHT + 'px';
+      if (pinStyleTop < pinCoords.MIN_Y - mainPinParams.HEIGHT) {
+        mapPin.style.top = pinCoords.MIN_Y - mainPinParams.HEIGHT + 'px';
+      } else if (pinStyleTop > pinCoords.MAX_Y - mainPinParams.HEIGHT) {
+        mapPin.style.top = pinCoords.MAX_Y - mainPinParams.HEIGHT + 'px';
       }
 
       if (pinStyleLeft < pinCoords.MIN_X) {
-        mapPin.style.left = pinCoords.MIN_X - Math.round(mapPin.offsetWidth / 2) + 'px';
-      } else if (pinStyleLeft > pinCoords.MAX_X) {
-        mapPin.style.left = pinCoords.MAX_X + 'px';
+        mapPin.style.left = pinCoords.MIN_X - mainPinParams.HALF_WIDTH + 'px';
+      } else if (pinStyleLeft > pinCoords.MAX_X - mainPinParams.HALF_WIDTH) {
+        mapPin.style.left = pinCoords.MAX_X - mainPinParams.HALF_WIDTH + 'px';
       }
 
       window.form.setAddress();
