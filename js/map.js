@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var ADVERTISEMENTS_AMOUNT = 8;
   var isMapActive = false;
   var pinCoords = {
     X: 570,
@@ -17,6 +16,7 @@
     HEIGHT: 81
   };
 
+  var main = document.querySelector('main');
   var map = document.querySelector('.map');
   var mapPinsList = map.querySelector('.map__pins');
   var mapPin = mapPinsList.querySelector('.map__pin--main');
@@ -24,16 +24,17 @@
   var filterElements = document.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
 
-  var generateAdvertisementsList = function (amount) {
-    var advertisementsList = [];
+  var successHandler = function (data) {
+    mapPinsList.appendChild(window.pin.render(data));
+  };
 
-    for (var i = 0; i < amount; i++) {
-      var advertisement = window.data.generateAdvertisement(i);
+  var errorHandler = function (message) {
+    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+    var error = errorTemplate.cloneNode(true);
 
-      advertisementsList.push(advertisement);
-    }
+    error.querySelector('.error__message').textContent = message;
 
-    return advertisementsList;
+    main.insertAdjacentElement('afterbegin', error);
   };
 
   var activateMap = function () {
@@ -49,8 +50,7 @@
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
 
-    var advertisementsList = generateAdvertisementsList(ADVERTISEMENTS_AMOUNT);
-    mapPinsList.appendChild(window.pin.render(advertisementsList, mapPinsList));
+    window.backend.load(successHandler, errorHandler);
   };
 
   var getMapPinCoords = function () {
@@ -135,6 +135,15 @@
 
   mapPin.addEventListener('keydown', function (evt) {
     window.utils.isEnterEvent(evt, activateMap);
+  });
+
+  main.addEventListener('click', function (evt) {
+    var target = evt.target;
+
+    if (target.matches('.error__button')) {
+      document.querySelector('.error').remove();
+      window.backend.load(successHandler, errorHandler);
+    }
   });
 
   window.map = {
