@@ -53,6 +53,18 @@
     window.backend.load(successHandler, errorHandler);
   };
 
+  var saveFormData = function (evt) {
+    window.backend.save(new FormData(adForm), function () {
+      // очистите заполненные поля;
+      // удалите метки похожих объявлений и карточку активного объявления;
+      // верните метку адреса в исходное положение, не забыв скорректировать координаты, отображаемые в поле «Адрес»;
+      // надо вызывать функцию deactivateMap - в ней вызывать функции для действий выше
+      // onSuccess - показывать сообщение и закрывать его на esc и на любую область экрана
+      // onError - уже показываю ошибку и закрываю при клике на кнопку. Добавить на ESC и любую область экрана
+    });
+    evt.preventDefault();
+  };
+
   var getMapPinCoords = function () {
     var pinStyleLeft = parseInt(mapPin.style.left, 10);
     var pinStyleTop = parseInt(mapPin.style.top, 10);
@@ -145,6 +157,8 @@
       window.backend.load(successHandler, errorHandler);
     }
   });
+
+  adForm.addEventListener('submit', saveFormData, formSubmitErrorHandler);
 
   window.map = {
     getPinCoords: getMapPinCoords
