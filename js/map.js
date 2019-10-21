@@ -24,6 +24,7 @@
   var filterElements = document.querySelectorAll('.map__filter');
   var filterFeatures = document.querySelectorAll('.map__features');
   var adForm = document.querySelector('.ad-form');
+  var adFormResetButton = document.querySelector('.ad-form__reset');
 
   var getMapPinCoords = function () {
     var pinStyleLeft = parseInt(mapPin.style.left, 10);
@@ -89,6 +90,10 @@
     window.card.popupCloseHandler();
     pinsRemoveHandler();
     setInitialMainPinCoords();
+    window.utils.toggleFormElements(formElements, true);
+    window.utils.toggleFormElements(filterElements, true);
+    window.utils.toggleFormElements(filterFeatures, true);
+    adForm.classList.add('ad-form--disabled');
     map.classList.add('map--faded');
   };
 
@@ -119,6 +124,7 @@
   var activateMap = function () {
     isMapActive = true;
 
+    // стоит ли три этих вызова(а также те, что выше и ниже в коде) объединить в одну функцию?
     window.utils.toggleFormElements(formElements, false);
     window.utils.toggleFormElements(filterElements, false);
     window.utils.toggleFormElements(filterFeatures, false);
@@ -210,6 +216,8 @@
   });
 
   adForm.addEventListener('submit', saveFormData);
+
+  adFormResetButton.addEventListener('click', deactivateMap);
 
   window.map = {
     getPinCoords: getMapPinCoords
