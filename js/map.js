@@ -20,8 +20,9 @@
   var map = document.querySelector('.map');
   var mapPinsList = map.querySelector('.map__pins');
   var mapPin = mapPinsList.querySelector('.map__pin--main');
-  var formElements = document.querySelectorAll('.ad-form__element');
+  var formElements = document.querySelectorAll('.ad-form fieldset');
   var filterElements = document.querySelectorAll('.map__filter');
+  var filterFeatures = document.querySelectorAll('.map__features');
   var adForm = document.querySelector('.ad-form');
 
   var getMapPinCoords = function () {
@@ -120,6 +121,7 @@
 
     window.utils.toggleFormElements(formElements, false);
     window.utils.toggleFormElements(filterElements, false);
+    window.utils.toggleFormElements(filterFeatures, false);
     window.form.activate();
 
     mapPin.removeEventListener('keydown', activateMap);
@@ -133,6 +135,7 @@
 
   window.utils.toggleFormElements(formElements, true);
   window.utils.toggleFormElements(filterElements, true);
+  window.utils.toggleFormElements(filterFeatures, true);
 
   mapPin.addEventListener('mousedown', function (evt) {
     if (map.classList.contains('map--faded')) {
