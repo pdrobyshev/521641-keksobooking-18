@@ -24,6 +24,25 @@
   var filterElements = document.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
 
+  var getMapPinCoords = function () {
+    var pinStyleLeft = parseInt(mapPin.style.left, 10);
+    var pinStyleTop = parseInt(mapPin.style.top, 10);
+
+    var x = pinStyleLeft + mainPinParams.HALF_WIDTH;
+    var y = !isMapActive ? pinStyleTop + mainPinParams.HALF_HEIGHT : pinStyleTop + mainPinParams.HEIGHT;
+    return 'x: ' + x + ' y: ' + y;
+  };
+
+  var initialMainPinCoords = getMapPinCoords();
+
+  var setInitialMainPinCoords = function () {
+    var adFormAddress = document.querySelector('input[name="address"]');
+
+    mapPin.style.left = pinCoords.X + 'px';
+    mapPin.style.top = pinCoords.Y + 'px';
+    adFormAddress.value = initialMainPinCoords;
+  };
+
   var successHandler = function (data) {
     mapPinsList.appendChild(window.pin.render(data));
   };
@@ -35,6 +54,65 @@
     error.querySelector('.error__message').textContent = message;
 
     main.insertAdjacentElement('afterbegin', error);
+
+    main.addEventListener('click', function (evt) {
+      var target = evt.target;
+
+      if (target.matches('.error__button')) {
+        error.remove();
+        window.backend.load(successHandler, errorHandler);
+      }
+    });
+
+    document.addEventListener('keydown', function (evt) {
+      window.utils.isEscEvent(evt, function () {
+        error.remove();
+      });
+    });
+
+    error.addEventListener('click', function () {
+      error.remove();
+    });
+  };
+
+  var pinsRemoveHandler = function () {
+    var pins = document.querySelectorAll('.map__pin[type="button"]');
+
+    pins.forEach(function (pin) {
+      pin.remove();
+    });
+  };
+
+  var deactivateMap = function () {
+    adForm.reset();
+    window.card.popupCloseHandler();
+    pinsRemoveHandler();
+    setInitialMainPinCoords();
+    map.classList.add('map--faded');
+  };
+
+  var formSubmitSuccesssHandler = function () {
+    var successTemplate = document.querySelector('#success').content.querySelector('.success');
+    var success = successTemplate.cloneNode(true);
+
+    main.insertAdjacentElement('afterbegin', success);
+
+    deactivateMap();
+
+    document.addEventListener('keydown', function (evt) {
+      window.utils.isEscEvent(evt, function () {
+        success.remove();
+      });
+    });
+
+    success.addEventListener('click', function () {
+      success.remove();
+    });
+  };
+
+  var saveFormData = function (evt) {
+    window.backend.save(new FormData(adForm), formSubmitSuccesssHandler, errorHandler);
+    evt.preventDefault();
   };
 
   var activateMap = function () {
@@ -51,27 +129,6 @@
     adForm.classList.remove('ad-form--disabled');
 
     window.backend.load(successHandler, errorHandler);
-  };
-
-  var saveFormData = function (evt) {
-    window.backend.save(new FormData(adForm), function () {
-      // очистите заполненные поля;
-      // удалите метки похожих объявлений и карточку активного объявления;
-      // верните метку адреса в исходное положение, не забыв скорректировать координаты, отображаемые в поле «Адрес»;
-      // надо вызывать функцию deactivateMap - в ней вызывать функции для действий выше
-      // onSuccess - показывать сообщение и закрывать его на esc и на любую область экрана
-      // onError - уже показываю ошибку и закрываю при клике на кнопку. Добавить на ESC и любую область экрана
-    });
-    evt.preventDefault();
-  };
-
-  var getMapPinCoords = function () {
-    var pinStyleLeft = parseInt(mapPin.style.left, 10);
-    var pinStyleTop = parseInt(mapPin.style.top, 10);
-
-    var x = pinStyleLeft + mainPinParams.HALF_WIDTH;
-    var y = !isMapActive ? pinStyleTop + mainPinParams.HALF_HEIGHT : pinStyleTop + mainPinParams.HEIGHT;
-    return 'x: ' + x + ' y: ' + y;
   };
 
   window.utils.toggleFormElements(formElements, true);
@@ -149,16 +206,7 @@
     window.utils.isEnterEvent(evt, activateMap);
   });
 
-  main.addEventListener('click', function (evt) {
-    var target = evt.target;
-
-    if (target.matches('.error__button')) {
-      document.querySelector('.error').remove();
-      window.backend.load(successHandler, errorHandler);
-    }
-  });
-
-  adForm.addEventListener('submit', saveFormData, formSubmitErrorHandler);
+  adForm.addEventListener('submit', saveFormData);
 
   window.map = {
     getPinCoords: getMapPinCoords
