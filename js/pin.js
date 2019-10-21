@@ -8,6 +8,16 @@
 
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
+  var removePinActiveClass = function (pin) {
+    var pins = document.querySelectorAll('.map__pin[type="button"]');
+
+    pins.forEach(function (pinEl) {
+      pinEl.classList.remove('map__pin--active');
+    });
+
+    pin.classList.add('map__pin--active');
+  };
+
   var generatePin = function (advertisement) {
     var pin = pinTemplate.cloneNode(true);
 
@@ -17,9 +27,11 @@
     pin.querySelector('img').alt = advertisement.offer.title;
 
     pin.addEventListener('click', function () {
+      removePinActiveClass(pin);
       window.card.show(advertisement);
     });
     pin.addEventListener('keydown', function (evt) {
+      removePinActiveClass(pin);
       window.utils.isEnterEvent(evt, window.card.show, advertisement);
     });
 
