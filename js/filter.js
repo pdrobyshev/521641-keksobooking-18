@@ -20,8 +20,7 @@
   };
 
   var filterFormChangeHandler = function () {
-    var filteredPins = filter(savedData);
-    window.map.appendPins(filteredPins);
+    window.map.appendPins(savedData);
   };
 
   mapFilters.addEventListener('change', function () {

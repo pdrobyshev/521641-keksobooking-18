@@ -49,7 +49,7 @@
     return pin;
   };
 
-  var renderPins = function (advertisementsList) {
+  var generatePins = function (advertisementsList) {
     var fragment = document.createDocumentFragment();
 
     advertisementsList.forEach(function (advertisement) {
@@ -60,7 +60,7 @@
   };
 
   window.pin = {
-    render: renderPins,
+    generate: generatePins,
     deleteAll: deleteAllPins
   };
 })();

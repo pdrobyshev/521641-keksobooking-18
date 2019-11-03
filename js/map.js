@@ -46,14 +46,13 @@
   };
 
   var appendPins = function (pins) {
-    var pinsFragment = window.pin.render(pins);
+    var filteredPins = window.filter.pins(pins);
+    var pinsFragment = window.pin.generate(filteredPins);
     mapPinsList.appendChild(pinsFragment);
   };
 
   var successHandler = function (data) {
-    var filteredData = window.filter.pins(data);
-
-    appendPins(filteredData);
+    appendPins(data);
   };
 
   var errorHandler = function (message) {
