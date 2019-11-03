@@ -45,8 +45,15 @@
     adFormAddress.value = initialMainPinCoords;
   };
 
+  var appendPins = function (pins) {
+    var pinsFragment = window.pin.render(pins);
+    mapPinsList.appendChild(pinsFragment);
+  };
+
   var successHandler = function (data) {
-    mapPinsList.appendChild(window.pin.render(data));
+    var filteredData = window.filter.pins(data);
+
+    appendPins(filteredData);
   };
 
   var errorHandler = function (message) {
@@ -85,14 +92,18 @@
     });
   };
 
+  var toggleAllFormElements = function (bool) {
+    window.utils.toggleFormElements(formElements, bool);
+    window.utils.toggleFormElements(filterElements, bool);
+    window.utils.toggleFormElements(filterFeatures, bool);
+  };
+
   var deactivateMap = function () {
     adForm.reset();
     window.card.popupCloseHandler();
     pinsRemoveHandler();
     setInitialMainPinCoords();
-    window.utils.toggleFormElements(formElements, true);
-    window.utils.toggleFormElements(filterElements, true);
-    window.utils.toggleFormElements(filterFeatures, true);
+    toggleAllFormElements(true);
     adForm.classList.add('ad-form--disabled');
     map.classList.add('map--faded');
   };
@@ -124,10 +135,7 @@
   var activateMap = function () {
     isMapActive = true;
 
-    // стоит ли три этих вызова(а также те, что выше и ниже в коде) объединить в одну функцию?
-    window.utils.toggleFormElements(formElements, false);
-    window.utils.toggleFormElements(filterElements, false);
-    window.utils.toggleFormElements(filterFeatures, false);
+    toggleAllFormElements(false);
     window.form.activate();
 
     mapPin.removeEventListener('keydown', activateMap);
@@ -139,9 +147,7 @@
     window.backend.load(successHandler, errorHandler);
   };
 
-  window.utils.toggleFormElements(formElements, true);
-  window.utils.toggleFormElements(filterElements, true);
-  window.utils.toggleFormElements(filterFeatures, true);
+  toggleAllFormElements(true);
 
   mapPin.addEventListener('mousedown', function (evt) {
     if (map.classList.contains('map--faded')) {
@@ -220,6 +226,7 @@
   adFormResetButton.addEventListener('click', deactivateMap);
 
   window.map = {
-    getPinCoords: getMapPinCoords
+    getPinCoords: getMapPinCoords,
+    appendPins: appendPins
   };
 })();
