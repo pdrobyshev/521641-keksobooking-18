@@ -26,6 +26,7 @@
   var adForm = document.querySelector('.ad-form');
   var adFormResetButton = document.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
+  var currentPins = [];
 
   window.getMapPinCoords = function () {
     var pinStyleLeft = parseInt(mapPin.style.left, 10);
@@ -47,14 +48,23 @@
   };
 
   var deleteAllPins = function () {
-    var mapPinsArray = Array.from(mapPinsList.children);
-    var mapOverlay = document.querySelector('.map__overlay');
-
-    mapPinsArray.forEach(function (pin) {
-      if (pin !== mapPin && pin !== mapOverlay) {
+    if (currentPins) {
+      currentPins.forEach(function (pin) {
         pin.remove();
-      }
+      });
+    }
+  };
+
+  var generatePinsFragment = function (advertisementsList) {
+    var fragment = document.createDocumentFragment();
+
+    advertisementsList.forEach(function (advertisement) {
+      var pin = window.generatePin(advertisement);
+      currentPins.push(pin);
+      fragment.appendChild(pin);
     });
+
+    return fragment;
   };
 
   var filterFormChangeHandler = function (data) {
@@ -65,7 +75,7 @@
 
   var appendPins = function (pins) {
     var filteredPins = window.filter(pins);
-    var pinsFragment = window.generatePins(filteredPins);
+    var pinsFragment = generatePinsFragment(filteredPins);
     mapPinsList.appendChild(pinsFragment);
   };
 
