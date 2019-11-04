@@ -97,7 +97,7 @@
   };
 
   window.card = {
-    popupCloseHandler: popupCloseHandler,
+    remove: popupCloseHandler,
     show: showAdCard
   };
 })();

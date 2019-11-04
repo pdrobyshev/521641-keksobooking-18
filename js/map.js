@@ -69,7 +69,7 @@
 
   var filterFormChangeHandler = function (data) {
     deleteAllPins();
-    window.card.popupCloseHandler();
+    window.card.remove();
     appendPins(data);
   };
 
@@ -115,14 +115,6 @@
     });
   };
 
-  var pinsRemoveHandler = function () {
-    var pins = document.querySelectorAll('.map__pin[type="button"]');
-
-    pins.forEach(function (pin) {
-      pin.remove();
-    });
-  };
-
   var toggleAllFormElements = function (bool) {
     window.utils.toggleFormElements(formElements, bool);
     window.utils.toggleFormElements(filterElements, bool);
@@ -131,8 +123,8 @@
 
   var deactivateMap = function () {
     adForm.reset();
-    window.card.popupCloseHandler();
-    pinsRemoveHandler();
+    window.card.remove();
+    deleteAllPins();
     setInitialMainPinCoords();
     toggleAllFormElements(true);
     adForm.classList.add('ad-form--disabled');
