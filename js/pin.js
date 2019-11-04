@@ -8,17 +8,6 @@
 
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-  var deleteAllPins = function () {
-    var pins = document.querySelectorAll('.map__pin');
-    var mainPin = document.querySelector('.map__pin--main');
-
-    pins.forEach(function (pin) {
-      if (pin !== mainPin) {
-        pin.remove();
-      }
-    });
-  };
-
   var removePinActiveClass = function (pin) {
     var pins = document.querySelectorAll('.map__pin[type="button"]');
 
@@ -49,7 +38,7 @@
     return pin;
   };
 
-  var generatePins = function (advertisementsList) {
+  window.generatePins = function (advertisementsList) {
     var fragment = document.createDocumentFragment();
 
     advertisementsList.forEach(function (advertisement) {
@@ -57,10 +46,5 @@
     });
 
     return fragment;
-  };
-
-  window.pin = {
-    generate: generatePins,
-    deleteAll: deleteAllPins
   };
 })();

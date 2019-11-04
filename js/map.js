@@ -25,8 +25,9 @@
   var filterFeatures = document.querySelectorAll('.map__features');
   var adForm = document.querySelector('.ad-form');
   var adFormResetButton = document.querySelector('.ad-form__reset');
+  var mapFilters = document.querySelector('.map__filters');
 
-  var getMapPinCoords = function () {
+  window.getMapPinCoords = function () {
     var pinStyleLeft = parseInt(mapPin.style.left, 10);
     var pinStyleTop = parseInt(mapPin.style.top, 10);
 
@@ -35,7 +36,7 @@
     return 'x: ' + x + ' y: ' + y;
   };
 
-  var initialMainPinCoords = getMapPinCoords();
+  var initialMainPinCoords = window.getMapPinCoords();
 
   var setInitialMainPinCoords = function () {
     var adFormAddress = document.querySelector('input[name="address"]');
@@ -45,14 +46,35 @@
     adFormAddress.value = initialMainPinCoords;
   };
 
+  var deleteAllPins = function () {
+    var mapPinsArray = Array.from(mapPinsList.children);
+    var mapOverlay = document.querySelector('.map__overlay');
+
+    mapPinsArray.forEach(function (pin) {
+      if (pin !== mapPin && pin !== mapOverlay) {
+        pin.remove();
+      }
+    });
+  };
+
+  var filterFormChangeHandler = function (data) {
+    deleteAllPins();
+    window.card.popupCloseHandler();
+    appendPins(data);
+  };
+
   var appendPins = function (pins) {
-    var filteredPins = window.filter.pins(pins);
-    var pinsFragment = window.pin.generate(filteredPins);
+    var filteredPins = window.filter(pins);
+    var pinsFragment = window.generatePins(filteredPins);
     mapPinsList.appendChild(pinsFragment);
   };
 
   var successHandler = function (data) {
     appendPins(data);
+
+    mapFilters.addEventListener('change', function () {
+      filterFormChangeHandler(data);
+    });
   };
 
   var errorHandler = function (message) {
@@ -107,7 +129,7 @@
     map.classList.add('map--faded');
   };
 
-  var formSubmitSuccesssHandler = function () {
+  var formSubmitSuccessHandler = function () {
     var successTemplate = document.querySelector('#success').content.querySelector('.success');
     var success = successTemplate.cloneNode(true);
 
@@ -127,7 +149,7 @@
   };
 
   var saveFormData = function (evt) {
-    window.backend.save(new FormData(adForm), formSubmitSuccesssHandler, errorHandler);
+    window.backend.save(new FormData(adForm), formSubmitSuccessHandler, errorHandler);
     evt.preventDefault();
   };
 
@@ -223,9 +245,4 @@
   adForm.addEventListener('submit', saveFormData);
 
   adFormResetButton.addEventListener('click', deactivateMap);
-
-  window.map = {
-    getPinCoords: getMapPinCoords,
-    appendPins: appendPins
-  };
 })();
