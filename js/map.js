@@ -22,9 +22,6 @@
   var map = document.querySelector('.map');
   var mapPinsList = map.querySelector('.map__pins');
   var mapPin = mapPinsList.querySelector('.map__pin--main');
-  var formElements = document.querySelectorAll('.ad-form fieldset');
-  var filterElements = document.querySelectorAll('.map__filter');
-  var filterFeatures = document.querySelectorAll('.map__features');
   var adForm = document.querySelector('.ad-form');
   var adFormResetButton = document.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
@@ -116,18 +113,12 @@
     });
   };
 
-  var toggleAllFormElements = function (bool) {
-    window.utils.toggleFormElements(formElements, bool);
-    window.utils.toggleFormElements(filterElements, bool);
-    window.utils.toggleFormElements(filterFeatures, bool);
-  };
-
   var deactivateMap = function () {
     adForm.reset();
     window.card.remove();
     deleteAllPins();
     setInitialMainPinCoords();
-    toggleAllFormElements(true);
+    window.utils.toggleAllFormElements(true);
     adForm.classList.add('ad-form--disabled');
     map.classList.add('map--faded');
   };
@@ -159,7 +150,7 @@
   var activateMap = function () {
     isMapActive = true;
 
-    toggleAllFormElements(false);
+    window.utils.toggleAllFormElements(false);
     window.form.activate();
 
     mapPin.removeEventListener('keydown', activateMap);
@@ -171,7 +162,7 @@
     window.backend.load(successHandler, errorHandler);
   };
 
-  toggleAllFormElements(true);
+  window.utils.toggleAllFormElements(true);
 
   mapPin.addEventListener('mousedown', function (evt) {
     if (map.classList.contains('map--faded')) {
@@ -250,6 +241,6 @@
   adFormResetButton.addEventListener('click', deactivateMap);
 
   window.map = {
-    getPinCoords: getMapPinCoords,
+    getPinCoords: getMapPinCoords
   };
 })();
