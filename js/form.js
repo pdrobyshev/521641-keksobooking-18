@@ -25,7 +25,7 @@
   var checkOut = document.querySelector('#timeout');
 
   var setAddress = function () {
-    adFormAddress.value = window.getMapPinCoords();
+    adFormAddress.value = window.map.getPinCoords();
   };
 
   var compareRoomsToCapacity = function () {

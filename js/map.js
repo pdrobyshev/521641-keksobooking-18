@@ -15,6 +15,7 @@
     HALF_HEIGHT: 33,
     HEIGHT: 81
   };
+  var currentPins = [];
 
   var main = document.querySelector('main');
   var map = document.querySelector('.map');
@@ -26,9 +27,8 @@
   var adForm = document.querySelector('.ad-form');
   var adFormResetButton = document.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
-  var currentPins = [];
 
-  window.getMapPinCoords = function () {
+  var getMapPinCoords = function () {
     var pinStyleLeft = parseInt(mapPin.style.left, 10);
     var pinStyleTop = parseInt(mapPin.style.top, 10);
 
@@ -37,7 +37,7 @@
     return 'x: ' + x + ' y: ' + y;
   };
 
-  var initialMainPinCoords = window.getMapPinCoords();
+  var initialMainPinCoords = getMapPinCoords();
 
   var setInitialMainPinCoords = function () {
     var adFormAddress = document.querySelector('input[name="address"]');
@@ -247,4 +247,8 @@
   adForm.addEventListener('submit', saveFormData);
 
   adFormResetButton.addEventListener('click', deactivateMap);
+
+  window.map = {
+    getPinCoords: getMapPinCoords,
+  };
 })();
