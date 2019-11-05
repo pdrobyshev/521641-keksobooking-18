@@ -15,6 +15,7 @@
     HALF_HEIGHT: 33,
     HEIGHT: 81
   };
+  var MAX_PINS = 5;
   var currentPins = [];
 
   var main = document.querySelector('main');
@@ -74,7 +75,7 @@
   };
 
   var appendPins = function (pins) {
-    var filteredPins = window.filter(pins);
+    var filteredPins = window.filter(pins).slice(0, MAX_PINS);
     var pinsFragment = generatePinsFragment(filteredPins);
     mapPinsList.appendChild(pinsFragment);
   };
