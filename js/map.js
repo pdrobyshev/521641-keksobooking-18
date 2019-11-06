@@ -15,16 +15,17 @@
     HALF_HEIGHT: 33,
     HEIGHT: 81
   };
+  var MAX_PINS = 5;
+  var currentPins = [];
 
   var main = document.querySelector('main');
   var map = document.querySelector('.map');
   var mapPinsList = map.querySelector('.map__pins');
   var mapPin = mapPinsList.querySelector('.map__pin--main');
-  var formElements = document.querySelectorAll('.ad-form fieldset');
-  var filterElements = document.querySelectorAll('.map__filter');
-  var filterFeatures = document.querySelectorAll('.map__features');
   var adForm = document.querySelector('.ad-form');
+  var adFormAddress = document.querySelector('input[name="address"]');
   var adFormResetButton = document.querySelector('.ad-form__reset');
+  var mapFilters = document.querySelector('.map__filters');
 
   var getMapPinCoords = function () {
     var pinStyleLeft = parseInt(mapPin.style.left, 10);
@@ -37,16 +38,54 @@
 
   var initialMainPinCoords = getMapPinCoords();
 
-  var setInitialMainPinCoords = function () {
-    var adFormAddress = document.querySelector('input[name="address"]');
+  var setAddress = function () {
+    adFormAddress.value = getMapPinCoords();
+  };
 
+  var setInitialMainPinCoords = function () {
     mapPin.style.left = pinCoords.X + 'px';
     mapPin.style.top = pinCoords.Y + 'px';
     adFormAddress.value = initialMainPinCoords;
   };
 
+  var deleteAllPins = function () {
+    if (currentPins) {
+      currentPins.forEach(function (pin) {
+        pin.remove();
+      });
+    }
+  };
+
+  var generatePinsFragment = function (advertisementsList) {
+    var fragment = document.createDocumentFragment();
+
+    advertisementsList.forEach(function (advertisement) {
+      var pin = window.generatePin(advertisement);
+      currentPins.push(pin);
+      fragment.appendChild(pin);
+    });
+
+    return fragment;
+  };
+
+  var filterFormChangeHandler = function (data) {
+    deleteAllPins();
+    window.card.remove();
+    appendPins(data);
+  };
+
+  var appendPins = function (pins) {
+    var filteredPins = window.filter(pins).slice(0, MAX_PINS);
+    var pinsFragment = generatePinsFragment(filteredPins);
+    mapPinsList.appendChild(pinsFragment);
+  };
+
   var successHandler = function (data) {
-    mapPinsList.appendChild(window.pin.render(data));
+    appendPins(data);
+
+    mapFilters.addEventListener('change', function () {
+      filterFormChangeHandler(data);
+    });
   };
 
   var errorHandler = function (message) {
@@ -77,27 +116,17 @@
     });
   };
 
-  var pinsRemoveHandler = function () {
-    var pins = document.querySelectorAll('.map__pin[type="button"]');
-
-    pins.forEach(function (pin) {
-      pin.remove();
-    });
-  };
-
   var deactivateMap = function () {
     adForm.reset();
-    window.card.popupCloseHandler();
-    pinsRemoveHandler();
+    window.card.remove();
+    deleteAllPins();
     setInitialMainPinCoords();
-    window.utils.toggleFormElements(formElements, true);
-    window.utils.toggleFormElements(filterElements, true);
-    window.utils.toggleFormElements(filterFeatures, true);
+    window.form.toggleAllElements(true);
     adForm.classList.add('ad-form--disabled');
     map.classList.add('map--faded');
   };
 
-  var formSubmitSuccesssHandler = function () {
+  var formSubmitSuccessHandler = function () {
     var successTemplate = document.querySelector('#success').content.querySelector('.success');
     var success = successTemplate.cloneNode(true);
 
@@ -117,17 +146,15 @@
   };
 
   var saveFormData = function (evt) {
-    window.backend.save(new FormData(adForm), formSubmitSuccesssHandler, errorHandler);
+    window.backend.save(new FormData(adForm), formSubmitSuccessHandler, errorHandler);
     evt.preventDefault();
   };
 
   var activateMap = function () {
     isMapActive = true;
 
-    // стоит ли три этих вызова(а также те, что выше и ниже в коде) объединить в одну функцию?
-    window.utils.toggleFormElements(formElements, false);
-    window.utils.toggleFormElements(filterElements, false);
-    window.utils.toggleFormElements(filterFeatures, false);
+    window.form.toggleAllElements(false);
+    setAddress();
     window.form.activate();
 
     mapPin.removeEventListener('keydown', activateMap);
@@ -139,9 +166,7 @@
     window.backend.load(successHandler, errorHandler);
   };
 
-  window.utils.toggleFormElements(formElements, true);
-  window.utils.toggleFormElements(filterElements, true);
-  window.utils.toggleFormElements(filterFeatures, true);
+  window.form.toggleAllElements(true);
 
   mapPin.addEventListener('mousedown', function (evt) {
     if (map.classList.contains('map--faded')) {
@@ -188,7 +213,7 @@
         mapPin.style.left = pinCoords.MAX_X - mainPinParams.HALF_WIDTH + 'px';
       }
 
-      window.form.setAddress();
+      setAddress();
     };
 
     var onMouseUp = function (upEvt) {

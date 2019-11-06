@@ -18,7 +18,7 @@
     pin.classList.add('map__pin--active');
   };
 
-  var generatePin = function (advertisement) {
+  window.generatePin = function (advertisement) {
     var pin = pinTemplate.cloneNode(true);
 
     pin.style.left = advertisement.location.x - pinParams.WIDTH / 2 + 'px';
@@ -36,19 +36,5 @@
     });
 
     return pin;
-  };
-
-  var renderPins = function (advertisementsList) {
-    var fragment = document.createDocumentFragment();
-
-    advertisementsList.forEach(function (advertisement) {
-      fragment.appendChild(generatePin(advertisement));
-    });
-
-    return fragment;
-  };
-
-  window.pin = {
-    render: renderPins
   };
 })();

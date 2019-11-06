@@ -17,19 +17,6 @@
         action(arg);
       }
     },
-    getRandomArrayElement: function (arr) {
-      var randomIndex = Math.floor(Math.random() * arr.length);
-
-      return arr[randomIndex];
-    },
-    getRandomArrayPart: function (arr) {
-      var randomIndex = Math.floor(Math.random() * arr.length + 1);
-
-      return arr.slice(0, randomIndex);
-    },
-    getRandomIntegerInRange: function (min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
     toggleFormElements: function (elements, isActive) {
       Array.prototype.forEach.call(elements, function (element) {
         element.disabled = isActive;
