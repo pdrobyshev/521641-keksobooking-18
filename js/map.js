@@ -68,11 +68,11 @@
     return fragment;
   };
 
-  var filterFormChangeHandler = function (data) {
+  var filterFormChangeHandler = window.debounce(function (data) {
     deleteAllPins();
     window.card.remove();
     appendPins(data);
-  };
+  });
 
   var appendPins = function (pins) {
     var filteredPins = window.filter(pins).slice(0, MAX_PINS);
