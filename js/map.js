@@ -26,6 +26,8 @@
   var adFormAddress = document.querySelector('input[name="address"]');
   var adFormResetButton = document.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
+  var avatar = document.querySelector('.ad-form-header__preview img');
+  var housingPhotoBlock = document.querySelector('.ad-form__photo');
 
   var getMapPinCoords = function () {
     var pinStyleLeft = parseInt(mapPin.style.left, 10);
@@ -124,6 +126,8 @@
     window.form.toggleAllElements(true);
     adForm.classList.add('ad-form--disabled');
     map.classList.add('map--faded');
+    avatar.src = 'img/muffin-grey.svg';
+    housingPhotoBlock.innerHTML = '';
   };
 
   var formSubmitSuccessHandler = function () {
