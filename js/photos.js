@@ -5,8 +5,7 @@
   var housingPhotoParams = {
     ALT: 'Фотография жилья',
     WIDTH: 68,
-    HEIGHT: 70,
-    SRC: 'img/muffin-grey.svg',
+    HEIGHT: 70
   };
 
   var avatarChooser = document.querySelector('.ad-form__field input[type=file]');
