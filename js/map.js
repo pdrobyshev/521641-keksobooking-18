@@ -82,6 +82,35 @@
     mapPinsList.appendChild(pinsFragment);
   };
 
+  var activateMap = function () {
+    isMapActive = true;
+
+    window.form.toggleAllElements(false);
+    setAddress();
+    window.form.activate();
+
+    mapPin.removeEventListener('keydown', activateMap);
+    mapPin.removeEventListener('mousedown', activateMap);
+
+    map.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
+
+    window.backend.load(successHandler, errorHandler);
+  };
+
+  var deactivateMap = function () {
+    mapFilters.reset();
+    adForm.reset();
+    window.card.remove();
+    deleteAllPins();
+    setInitialMainPinCoords();
+    window.form.toggleAllElements(true);
+    adForm.classList.add('ad-form--disabled');
+    map.classList.add('map--faded');
+    avatar.src = 'img/muffin-grey.svg';
+    housingPhotoBlock.innerHTML = '';
+  };
+
   var successHandler = function (data) {
     appendPins(data);
 
@@ -98,12 +127,10 @@
 
     main.insertAdjacentElement('afterbegin', error);
 
-    main.addEventListener('click', function (evt) {
+    error.addEventListener('click', function (evt) {
       var target = evt.target;
-
-      if (target.matches('.error__button')) {
+      if (target.className !== 'error__button') {
         error.remove();
-        window.backend.load(successHandler, errorHandler);
       }
     });
 
@@ -113,21 +140,12 @@
       });
     });
 
-    error.addEventListener('click', function () {
-      error.remove();
+    error.addEventListener('click', function (evt) {
+      var target = evt.target;
+      if (target.className !== 'error__message') {
+        error.remove();
+      }
     });
-  };
-
-  var deactivateMap = function () {
-    adForm.reset();
-    window.card.remove();
-    deleteAllPins();
-    setInitialMainPinCoords();
-    window.form.toggleAllElements(true);
-    adForm.classList.add('ad-form--disabled');
-    map.classList.add('map--faded');
-    avatar.src = 'img/muffin-grey.svg';
-    housingPhotoBlock.innerHTML = '';
   };
 
   var formSubmitSuccessHandler = function () {
@@ -144,30 +162,17 @@
       });
     });
 
-    success.addEventListener('click', function () {
-      success.remove();
+    success.addEventListener('click', function (evt) {
+      var target = evt.target;
+      if (target.className !== 'success__message') {
+        success.remove();
+      }
     });
   };
 
   var saveFormData = function (evt) {
     window.backend.save(new FormData(adForm), formSubmitSuccessHandler, errorHandler);
     evt.preventDefault();
-  };
-
-  var activateMap = function () {
-    isMapActive = true;
-
-    window.form.toggleAllElements(false);
-    setAddress();
-    window.form.activate();
-
-    mapPin.removeEventListener('keydown', activateMap);
-    mapPin.removeEventListener('mousedown', activateMap);
-
-    map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-
-    window.backend.load(successHandler, errorHandler);
   };
 
   window.form.toggleAllElements(true);
