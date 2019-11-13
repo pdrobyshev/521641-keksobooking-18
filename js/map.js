@@ -127,13 +127,6 @@
 
     main.insertAdjacentElement('afterbegin', error);
 
-    error.addEventListener('click', function (evt) {
-      var target = evt.target;
-      if (target.className !== 'error__button') {
-        error.remove();
-      }
-    });
-
     document.addEventListener('keydown', function (evt) {
       window.utils.isEscEvent(evt, function () {
         error.remove();
@@ -141,8 +134,7 @@
     });
 
     error.addEventListener('click', function (evt) {
-      var target = evt.target;
-      if (target.className !== 'error__message') {
+      if (evt.target.className !== 'error__message') {
         error.remove();
       }
     });
@@ -163,8 +155,7 @@
     });
 
     success.addEventListener('click', function (evt) {
-      var target = evt.target;
-      if (target.className !== 'success__message') {
+      if (evt.target.className !== 'success__message') {
         success.remove();
       }
     });
