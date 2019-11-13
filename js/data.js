@@ -6,14 +6,14 @@
   var STATUS_SUCCESS = 200;
   var TIMEOUT = 10000;
 
-  var request = function (onLoad, onError) {
+  var request = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.timeout = TIMEOUT;
 
     xhr.addEventListener('load', function () {
       if (xhr.status === STATUS_SUCCESS) {
-        onLoad(xhr.response);
+        onSuccess(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -30,20 +30,20 @@
     return xhr;
   };
 
-  var load = function (onLoad, onError) {
-    var xhr = request(onLoad, onError);
+  var download = function (onSuccess, onError) {
+    var xhr = request(onSuccess, onError);
     xhr.open('GET', DATA_URL);
     xhr.send();
   };
 
-  var save = function (data, onLoad, onError) {
-    var xhr = request(onLoad, onError);
+  var upload = function (data, onSuccess, onError) {
+    var xhr = request(onSuccess, onError);
     xhr.open('POST', URL);
     xhr.send(data);
   };
 
-  window.backend = {
-    load: load,
-    save: save
+  window.data = {
+    upload: upload,
+    download: download
   };
 })();

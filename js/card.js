@@ -24,6 +24,16 @@
     return cardFeature;
   };
 
+  var renderAdvertisementFeatures = function (advertisement) {
+    var cardFeatures = document.createDocumentFragment();
+
+    advertisement.offer.features.forEach(function (feature) {
+      cardFeatures.appendChild(generateAdvertisementFeature(feature));
+    });
+
+    return cardFeatures;
+  };
+
   var generateAdvertisementPhoto = function (src) {
     var photo = document.createElement('img');
     photo.className = 'popup__photo';
@@ -33,16 +43,6 @@
     photo.setAttribute('alt', photoParams.ALT);
 
     return photo;
-  };
-
-  var renderAdvertisementFeatures = function (advertisement) {
-    var cardFeatures = document.createDocumentFragment();
-
-    advertisement.offer.features.forEach(function (feature) {
-      cardFeatures.appendChild(generateAdvertisementFeature(feature));
-    });
-
-    return cardFeatures;
   };
 
   var renderAdvertisementPhotos = function (advertisement) {
@@ -55,7 +55,7 @@
     return photos;
   };
 
-  var popupCloseHandler = function () {
+  var onAdCardClose = function () {
     if (currentCard) {
       currentCard.remove();
     }
@@ -78,9 +78,11 @@
     card.querySelector('.popup__avatar').setAttribute('src', advertisement.author.avatar);
 
     var popupClose = card.querySelector('.popup__close');
-    popupClose.addEventListener('click', popupCloseHandler);
+
+    popupClose.addEventListener('click', onAdCardClose);
+
     document.addEventListener('keydown', function (evt) {
-      window.utils.isEscEvent(evt, popupCloseHandler);
+      window.utils.isEscEvent(evt, onAdCardClose);
     });
 
     return card;
@@ -92,12 +94,12 @@
   };
 
   var showAdCard = function (advertisement) {
-    popupCloseHandler();
+    onAdCardClose();
     renderCard(generateCard(advertisement));
   };
 
   window.card = {
-    remove: popupCloseHandler,
+    remove: onAdCardClose,
     show: showAdCard
   };
 })();

@@ -17,9 +17,9 @@
         action(arg);
       }
     },
-    toggleFormElements: function (elements, isActive) {
+    toggleFormElements: function (elements, bool) {
       Array.from(elements).forEach(function (element) {
-        element.disabled = isActive;
+        element.disabled = bool;
       });
     }
   };

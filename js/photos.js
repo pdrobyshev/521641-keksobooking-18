@@ -65,17 +65,17 @@
     reader.readAsDataURL(file);
   };
 
-  var fileChooserChangeHandler = function (chooser, cb) {
+  var onFileChooserChange = function (chooser, cb) {
     var files = chooser.files;
 
     checkFileExtension(files, cb);
   };
 
   avatarChooser.addEventListener('change', function () {
-    fileChooserChangeHandler(avatarChooser, renderAvatar);
+    onFileChooserChange(avatarChooser, renderAvatar);
   });
 
   housingPhotoChooser.addEventListener('change', function () {
-    fileChooserChangeHandler(housingPhotoChooser, renderHousingPhotos);
+    onFileChooserChange(housingPhotoChooser, renderHousingPhotos);
   });
 })();

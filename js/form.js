@@ -32,7 +32,7 @@
     window.utils.toggleFormElements(filterFeatures, bool);
   };
 
-  var compareRoomsToCapacity = function () {
+  var onRoomsChange = function () {
     var roomActiveOption = rooms.value;
     var capacityActiveOption = roomsCapacity.options[roomsCapacity.selectedIndex];
 
@@ -47,7 +47,7 @@
     }
   };
 
-  var setPrice = function () {
+  var onTypeChange = function () {
     typeOptions.forEach(function (option) {
       if (type.value === option.value) {
         setMinPrice(housingMinPrices[option.value]);
@@ -60,25 +60,23 @@
     price.placeholder = minPrice;
   };
 
-  var setCheckOutTime = function () {
-    var checkInValue = checkIn.options[checkIn.selectedIndex];
-    checkOut.value = checkInValue.value;
+  var onCheckOutTimeChange = function () {
+    checkOut.value = checkIn.value;
   };
 
-  var setCheckInTime = function () {
-    var checkOutValue = checkOut.options[checkOut.selectedIndex];
-    checkIn.value = checkOutValue.value;
+  var onCheckInTimeChange = function () {
+    checkIn.value = checkOut.value;
   };
 
   var activate = function () {
-    setPrice();
-    compareRoomsToCapacity();
+    onTypeChange();
+    onRoomsChange();
   };
 
-  type.addEventListener('change', setPrice);
-  checkIn.addEventListener('change', setCheckOutTime);
-  checkOut.addEventListener('change', setCheckInTime);
-  rooms.addEventListener('change', compareRoomsToCapacity);
+  type.addEventListener('change', onTypeChange);
+  checkIn.addEventListener('change', onCheckOutTimeChange);
+  checkOut.addEventListener('change', onCheckInTimeChange);
+  rooms.addEventListener('change', onRoomsChange);
 
   window.form = {
     activate: activate,

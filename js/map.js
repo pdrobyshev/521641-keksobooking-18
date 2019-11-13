@@ -70,7 +70,7 @@
     return fragment;
   };
 
-  var filterFormChangeHandler = window.debounce(function (data) {
+  var onFilterFormChange = window.debounce(function (data) {
     deleteAllPins();
     window.card.remove();
     appendPins(data);
@@ -95,7 +95,7 @@
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
 
-    window.backend.load(successHandler, errorHandler);
+    window.data.download(onSuccess, onError);
   };
 
   var deactivateMap = function () {
@@ -111,15 +111,15 @@
     housingPhotoBlock.innerHTML = '';
   };
 
-  var successHandler = function (data) {
+  var onSuccess = function (data) {
     appendPins(data);
 
     mapFilters.addEventListener('change', function () {
-      filterFormChangeHandler(data);
+      onFilterFormChange(data);
     });
   };
 
-  var errorHandler = function (message) {
+  var onError = function (message) {
     var errorTemplate = document.querySelector('#error').content.querySelector('.error');
     var error = errorTemplate.cloneNode(true);
 
@@ -140,7 +140,7 @@
     });
   };
 
-  var formSubmitSuccessHandler = function () {
+  var onFormSubmitSuccess = function () {
     var successTemplate = document.querySelector('#success').content.querySelector('.success');
     var success = successTemplate.cloneNode(true);
 
@@ -161,8 +161,8 @@
     });
   };
 
-  var saveFormData = function (evt) {
-    window.backend.save(new FormData(adForm), formSubmitSuccessHandler, errorHandler);
+  var onAdFormSubmit = function (evt) {
+    window.data.upload(new FormData(adForm), onFormSubmitSuccess, onError);
     evt.preventDefault();
   };
 
@@ -240,7 +240,7 @@
     window.utils.isEnterEvent(evt, activateMap);
   });
 
-  adForm.addEventListener('submit', saveFormData);
+  adForm.addEventListener('submit', onAdFormSubmit);
 
   adFormResetButton.addEventListener('click', deactivateMap);
 
