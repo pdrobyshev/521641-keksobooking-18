@@ -18,7 +18,7 @@
       }
     },
     toggleFormElements: function (elements, isActive) {
-      Array.prototype.forEach.call(elements, function (element) {
+      Array.from(elements).forEach(function (element) {
         element.disabled = isActive;
       });
     }
