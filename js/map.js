@@ -40,10 +40,6 @@
 
   var initialMainPinCoords = getMapPinCoords();
 
-  var setAddress = function () {
-    adFormAddress.value = getMapPinCoords();
-  };
-
   var setInitialMainPinCoords = function () {
     mapPin.style.left = pinCoords.X + 'px';
     mapPin.style.top = pinCoords.Y + 'px';
@@ -86,7 +82,7 @@
     isMapActive = true;
 
     window.form.toggleAllElements(false);
-    setAddress();
+    window.form.setAddress(getMapPinCoords());
     window.form.activate();
     window.activateFileChooserListeners();
 
@@ -94,7 +90,7 @@
     mapPin.removeEventListener('mousedown', activateMap);
 
     map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
+    window.form.activate(true);
   };
 
   var deactivateMap = function () {
@@ -103,9 +99,9 @@
     window.card.remove();
     deleteAllPins();
     setInitialMainPinCoords();
-    window.form.toggleAllElements(true);
-    adForm.classList.add('ad-form--disabled');
     map.classList.add('map--faded');
+    window.form.toggleAllElements(true);
+    window.form.activate(false);
     avatar.src = 'img/muffin-grey.svg';
     housingPhotoBlock.innerHTML = '';
   };
@@ -222,7 +218,7 @@
         mapPin.style.left = pinCoords.MAX_X - mainPinParams.HALF_WIDTH + 'px';
       }
 
-      setAddress();
+      window.form.setAddress(getMapPinCoords());
     };
 
     var onMouseUp = function (upEvt) {

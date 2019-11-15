@@ -25,7 +25,9 @@
   var formElements = document.querySelectorAll('.ad-form fieldset');
   var filterElements = document.querySelectorAll('.map__filter');
   var filterFeatures = document.querySelectorAll('.map__features');
-  var adFormSubmitButton = document.querySelector('.ad-form__submit');
+  var adForm = document.querySelector('.ad-form');
+  var adFormSubmitButton = adForm.querySelector('.ad-form__submit');
+  var adFormAddress = document.querySelector('input[name="address"]');
 
   var toggleAllFormElements = function (bool) {
     window.utils.toggleFormElements(formElements, bool);
@@ -94,6 +96,18 @@
     });
   };
 
+  var toggleAdForm = function (bool) {
+    if (bool) {
+      adForm.classList.remove('ad-form--disabled');
+    } else {
+      adForm.classList.add('ad-form--disabled');
+    }
+  };
+
+  var setAddress = function (coords) {
+    adFormAddress.value = coords;
+  };
+
   type.addEventListener('change', onTypeChange);
   checkIn.addEventListener('change', onCheckOutTimeChange);
   checkOut.addEventListener('change', onCheckInTimeChange);
@@ -103,6 +117,8 @@
   window.form = {
     activate: activate,
     toggleAllElements: toggleAllFormElements,
-    checkInputsValidity: checkFormInputs
+    checkInputsValidity: checkFormInputs,
+    activate: toggleAdForm,
+    setAddress: setAddress
   };
 })();
