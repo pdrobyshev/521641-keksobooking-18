@@ -111,19 +111,17 @@
   };
 
   var onSuccess = function (data) {
-    if (data) {
-      mapPin.addEventListener('mousedown', function (evt) {
-        activateMainMapPin(evt, data);
-      });
+    mapPin.addEventListener('mousedown', function (evt) {
+      activateMainMapPin(evt, data);
+    });
 
-      mapPin.addEventListener('keydown', function (evt) {
-        window.utils.isEnterEvent(evt, activateMainMapPin(evt, data));
-      });
+    mapPin.addEventListener('keydown', function (evt) {
+      window.utils.isEnterEvent(evt, activateMainMapPin(evt, data));
+    });
 
-      mapFilters.addEventListener('change', function () {
-        onFilterFormChange(data);
-      });
-    }
+    mapFilters.addEventListener('change', function () {
+      onFilterFormChange(data);
+    });
   };
 
   var onError = function (message) {
