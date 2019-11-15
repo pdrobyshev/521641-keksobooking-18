@@ -32,7 +32,7 @@
     window.utils.toggleFormElements(filterFeatures, bool);
   };
 
-  var onRoomsChange = function () {
+  var compareRoomsToCapacity = function () {
     var roomActiveOption = rooms.value;
     var capacityActiveOption = roomsCapacity.options[roomsCapacity.selectedIndex];
 
@@ -47,12 +47,20 @@
     }
   };
 
-  var onTypeChange = function () {
+  var onRoomsChange = function () {
+    compareRoomsToCapacity();
+  };
+
+  var setPrice = function () {
     typeOptions.forEach(function (option) {
       if (type.value === option.value) {
         setMinPrice(housingMinPrices[option.value]);
       }
     });
+  };
+
+  var onTypeChange = function () {
+    setPrice();
   };
 
   var setMinPrice = function (minPrice) {
@@ -69,8 +77,8 @@
   };
 
   var activate = function () {
-    onTypeChange();
-    onRoomsChange();
+    setPrice();
+    compareRoomsToCapacity();
   };
 
   type.addEventListener('change', onTypeChange);

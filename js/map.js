@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var isMapActive = false;
   var pinCoords = {
     X: 570,
     Y: 375,
@@ -16,6 +15,7 @@
     HEIGHT: 81
   };
   var MAX_PINS = 5;
+  var isMapActive = false;
   var currentPins = [];
 
   var main = document.querySelector('main');
@@ -24,7 +24,8 @@
   var mapPin = mapPinsList.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
   var adFormAddress = document.querySelector('input[name="address"]');
-  var adFormResetButton = document.querySelector('.ad-form__reset');
+  var adFormSubmitButton = adForm.querySelector('.ad-form__submit');
+  var adFormResetButton = adForm.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
   var avatar = document.querySelector('.ad-form-header__preview img');
   var housingPhotoBlock = document.querySelector('.ad-form__photo');
@@ -62,7 +63,7 @@
     var fragment = document.createDocumentFragment();
 
     advertisementsList.forEach(function (advertisement) {
-      var pin = window.generatePin(advertisement);
+      var pin = window.pin.generate(advertisement);
       currentPins.push(pin);
       fragment.appendChild(pin);
     });
@@ -88,6 +89,7 @@
     window.form.toggleAllElements(false);
     setAddress();
     window.form.activate();
+    window.activateFileChooserListeners();
 
     mapPin.removeEventListener('keydown', activateMap);
     mapPin.removeEventListener('mousedown', activateMap);
@@ -161,9 +163,22 @@
     });
   };
 
+  var checkFormInputs = function () {
+    var requiredInputs = adForm.querySelectorAll('input:required');
+
+    requiredInputs.forEach(function (input) {
+      if (!input.checkValidity()) {
+        input.style.boxShadow = '0 0 2px 2px #ff6547';
+      } else {
+        input.style.boxShadow = '';
+      }
+    });
+  };
+
   var onAdFormSubmit = function (evt) {
-    window.data.upload(new FormData(adForm), onFormSubmitSuccess, onError);
     evt.preventDefault();
+    checkFormInputs();
+    window.data.upload(new FormData(adForm), onFormSubmitSuccess, onError);
   };
 
   window.form.toggleAllElements(true);
@@ -241,6 +256,8 @@
   });
 
   adForm.addEventListener('submit', onAdFormSubmit);
+
+  adFormSubmitButton.addEventListener('click', checkFormInputs);
 
   adFormResetButton.addEventListener('click', deactivateMap);
 

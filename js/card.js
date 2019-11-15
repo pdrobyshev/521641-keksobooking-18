@@ -1,18 +1,18 @@
 'use strict';
 
 (function () {
-  var currentCard;
+  var photoParams = {
+    WIDTH: 45,
+    HEIGHT: 40,
+    ALT: 'Фотография жилья'
+  };
   var offerTypesTranslation = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
     'house': 'Дом',
     'palace': 'Дворец'
   };
-  var photoParams = {
-    WIDTH: 45,
-    HEIGHT: 40,
-    ALT: 'Фотография жилья'
-  };
+  var currentCard;
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var map = document.querySelector('.map');
@@ -55,10 +55,15 @@
     return photos;
   };
 
-  var onAdCardClose = function () {
+  var removeCard = function () {
     if (currentCard) {
       currentCard.remove();
     }
+  };
+
+  var onCardRemove = function () {
+    removeCard();
+    window.pin.removeActiveClass();
   };
 
   var generateCard = function (advertisement) {
@@ -79,10 +84,10 @@
 
     var popupClose = card.querySelector('.popup__close');
 
-    popupClose.addEventListener('click', onAdCardClose);
+    popupClose.addEventListener('click', onCardRemove);
 
     document.addEventListener('keydown', function (evt) {
-      window.utils.isEscEvent(evt, onAdCardClose);
+      window.utils.isEscEvent(evt, onCardRemove);
     });
 
     return card;
@@ -94,12 +99,12 @@
   };
 
   var showAdCard = function (advertisement) {
-    onAdCardClose();
+    removeCard();
     renderCard(generateCard(advertisement));
   };
 
   window.card = {
-    remove: onAdCardClose,
+    remove: removeCard,
     show: showAdCard
   };
 })();
