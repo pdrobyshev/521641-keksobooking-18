@@ -118,7 +118,7 @@
     activate: activate,
     toggleAllElements: toggleAllFormElements,
     checkInputsValidity: checkFormInputs,
-    activate: toggleAdForm,
+    toggle: toggleAdForm,
     setAddress: setAddress
   };
 })();

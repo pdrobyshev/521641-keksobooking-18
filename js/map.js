@@ -80,7 +80,9 @@
 
   var activateMap = function () {
     isMapActive = true;
+    map.classList.remove('map--faded');
 
+    window.form.toggle(true);
     window.form.toggleAllElements(false);
     window.form.setAddress(getMapPinCoords());
     window.form.activate();
@@ -88,20 +90,20 @@
 
     mapPin.removeEventListener('keydown', activateMap);
     mapPin.removeEventListener('mousedown', activateMap);
-
-    map.classList.remove('map--faded');
-    window.form.activate(true);
   };
 
   var deactivateMap = function () {
+    map.classList.add('map--faded');
+
     mapFilters.reset();
     adForm.reset();
+
     window.card.remove();
     deleteAllPins();
     setInitialMainPinCoords();
-    map.classList.add('map--faded');
+
+    window.form.toggle(false);
     window.form.toggleAllElements(true);
-    window.form.activate(false);
     avatar.src = 'img/muffin-grey.svg';
     housingPhotoBlock.innerHTML = '';
   };
