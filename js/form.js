@@ -25,6 +25,7 @@
   var formElements = document.querySelectorAll('.ad-form fieldset');
   var filterElements = document.querySelectorAll('.map__filter');
   var filterFeatures = document.querySelectorAll('.map__features');
+  var adFormSubmitButton = document.querySelector('.ad-form__submit');
 
   var toggleAllFormElements = function (bool) {
     window.utils.toggleFormElements(formElements, bool);
@@ -81,13 +82,27 @@
     compareRoomsToCapacity();
   };
 
+  var checkFormInputs = function () {
+    var requiredInputs = document.querySelectorAll('input:required');
+
+    requiredInputs.forEach(function (input) {
+      if (!input.checkValidity()) {
+        input.style.boxShadow = '0 0 2px 2px #ff6547';
+      } else {
+        input.style.boxShadow = '';
+      }
+    });
+  };
+
   type.addEventListener('change', onTypeChange);
   checkIn.addEventListener('change', onCheckOutTimeChange);
   checkOut.addEventListener('change', onCheckInTimeChange);
   rooms.addEventListener('change', onRoomsChange);
+  adFormSubmitButton.addEventListener('click', checkFormInputs);
 
   window.form = {
     activate: activate,
-    toggleAllElements: toggleAllFormElements
+    toggleAllElements: toggleAllFormElements,
+    checkInputsValidity: checkFormInputs
   };
 })();
