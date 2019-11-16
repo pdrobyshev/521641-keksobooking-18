@@ -1,18 +1,18 @@
 'use strict';
 
 (function () {
-  var currentCard;
+  var photoParams = {
+    WIDTH: 45,
+    HEIGHT: 40,
+    ALT: 'Фотография жилья'
+  };
   var offerTypesTranslation = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
     'house': 'Дом',
     'palace': 'Дворец'
   };
-  var photoParams = {
-    WIDTH: 45,
-    HEIGHT: 40,
-    ALT: 'Фотография жилья'
-  };
+  var currentCard;
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var map = document.querySelector('.map');
@@ -22,6 +22,16 @@
     cardFeature.className = 'popup__feature popup__feature--' + feature;
 
     return cardFeature;
+  };
+
+  var renderAdvertisementFeatures = function (advertisement) {
+    var cardFeatures = document.createDocumentFragment();
+
+    advertisement.offer.features.forEach(function (feature) {
+      cardFeatures.appendChild(generateAdvertisementFeature(feature));
+    });
+
+    return cardFeatures;
   };
 
   var generateAdvertisementPhoto = function (src) {
@@ -35,16 +45,6 @@
     return photo;
   };
 
-  var renderAdvertisementFeatures = function (advertisement) {
-    var cardFeatures = document.createDocumentFragment();
-
-    advertisement.offer.features.forEach(function (feature) {
-      cardFeatures.appendChild(generateAdvertisementFeature(feature));
-    });
-
-    return cardFeatures;
-  };
-
   var renderAdvertisementPhotos = function (advertisement) {
     var photos = document.createDocumentFragment();
 
@@ -55,10 +55,15 @@
     return photos;
   };
 
-  var popupCloseHandler = function () {
+  var removeCard = function () {
     if (currentCard) {
       currentCard.remove();
     }
+  };
+
+  var onCardRemove = function () {
+    removeCard();
+    window.pin.removeActiveClass();
   };
 
   var generateCard = function (advertisement) {
@@ -78,9 +83,17 @@
     card.querySelector('.popup__avatar').setAttribute('src', advertisement.author.avatar);
 
     var popupClose = card.querySelector('.popup__close');
-    popupClose.addEventListener('click', popupCloseHandler);
+
+    popupClose.addEventListener('click', function () {
+      onCardRemove();
+
+      popupClose.removeEventListener('click', onCardRemove);
+    });
+
     document.addEventListener('keydown', function (evt) {
-      window.utils.isEscEvent(evt, popupCloseHandler);
+      window.utils.isEscEvent(evt, onCardRemove);
+
+      document.removeEventListener('keydown', onCardRemove);
     });
 
     return card;
@@ -92,12 +105,12 @@
   };
 
   var showAdCard = function (advertisement) {
-    popupCloseHandler();
+    removeCard();
     renderCard(generateCard(advertisement));
   };
 
   window.card = {
-    remove: popupCloseHandler,
+    remove: removeCard,
     show: showAdCard
   };
 })();

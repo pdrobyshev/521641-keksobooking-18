@@ -25,6 +25,10 @@
   var formElements = document.querySelectorAll('.ad-form fieldset');
   var filterElements = document.querySelectorAll('.map__filter');
   var filterFeatures = document.querySelectorAll('.map__features');
+  var adForm = document.querySelector('.ad-form');
+  var adFormAddress = document.querySelector('input[name="address"]');
+  var adFormSubmitButton = adForm.querySelector('.ad-form__submit');
+  var adFormResetButton = document.querySelector('.ad-form__reset');
 
   var toggleAllFormElements = function (bool) {
     window.utils.toggleFormElements(formElements, bool);
@@ -47,6 +51,10 @@
     }
   };
 
+  var onRoomsChange = function () {
+    compareRoomsToCapacity();
+  };
+
   var setPrice = function () {
     typeOptions.forEach(function (option) {
       if (type.value === option.value) {
@@ -55,33 +63,69 @@
     });
   };
 
+  var onTypeChange = function () {
+    setPrice();
+  };
+
   var setMinPrice = function (minPrice) {
     price.setAttribute('min', minPrice);
     price.placeholder = minPrice;
   };
 
-  var setCheckOutTime = function () {
-    var checkInValue = checkIn.options[checkIn.selectedIndex];
-    checkOut.value = checkInValue.value;
+  var onCheckOutTimeChange = function () {
+    checkOut.value = checkIn.value;
   };
 
-  var setCheckInTime = function () {
-    var checkOutValue = checkOut.options[checkOut.selectedIndex];
-    checkIn.value = checkOutValue.value;
+  var onCheckInTimeChange = function () {
+    checkIn.value = checkOut.value;
   };
 
   var activate = function () {
     setPrice();
     compareRoomsToCapacity();
+
+    type.addEventListener('change', onTypeChange);
+    checkIn.addEventListener('change', onCheckOutTimeChange);
+    checkOut.addEventListener('change', onCheckInTimeChange);
+    rooms.addEventListener('change', onRoomsChange);
+    adFormSubmitButton.addEventListener('click', checkFormInputs);
+    adForm.addEventListener('submit', onAdFormSubmit);
+    adFormResetButton.addEventListener('click', window.map.deactivate);
   };
 
-  type.addEventListener('change', setPrice);
-  checkIn.addEventListener('change', setCheckOutTime);
-  checkOut.addEventListener('change', setCheckInTime);
-  rooms.addEventListener('change', compareRoomsToCapacity);
+  var checkFormInputs = function () {
+    var requiredInputs = document.querySelectorAll('input:required');
+
+    requiredInputs.forEach(function (input) {
+      input.style.boxShadow = !input.checkValidity() ? '0 0 2px 2px #ff6547' : '';
+    });
+  };
+
+  var toggleAdForm = function () {
+    adForm.classList.toggle('ad-form--disabled');
+  };
+
+  var setAddress = function (coords) {
+    var coordsX = coords[0];
+    var coordsY = coords[1];
+    adFormAddress.value = 'x: ' + coordsX + ' y: ' + coordsY;
+  };
+
+  var reset = function () {
+    adForm.reset();
+  };
+
+  var onAdFormSubmit = function (evt) {
+    evt.preventDefault();
+    checkFormInputs();
+    window.data.upload(new FormData(adForm), window.map.onFormSubmitSuccess, window.map.onError);
+  };
 
   window.form = {
     activate: activate,
-    toggleAllElements: toggleAllFormElements
+    toggleAllElements: toggleAllFormElements,
+    toggle: toggleAdForm,
+    setAddress: setAddress,
+    reset: reset
   };
 })();

@@ -17,9 +17,9 @@
         action(arg);
       }
     },
-    toggleFormElements: function (elements, isActive) {
-      Array.prototype.forEach.call(elements, function (element) {
-        element.disabled = isActive;
+    toggleFormElements: function (elements, bool) {
+      Array.from(elements).forEach(function (element) {
+        element.disabled = bool;
       });
     }
   };

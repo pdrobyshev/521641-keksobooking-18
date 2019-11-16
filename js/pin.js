@@ -8,17 +8,23 @@
 
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-  var removePinActiveClass = function (pin) {
+  var removeActiveClass = function (pin) {
     var pins = document.querySelectorAll('.map__pin[type="button"]');
 
     pins.forEach(function (pinEl) {
       pinEl.classList.remove('map__pin--active');
     });
 
-    pin.classList.add('map__pin--active');
+    if (pin) {
+      pin.classList.add('map__pin--active');
+    }
   };
 
-  window.generatePin = function (advertisement) {
+  var onPinClick = function (pin) {
+    removeActiveClass(pin);
+  };
+
+  var generatePin = function (advertisement) {
     var pin = pinTemplate.cloneNode(true);
 
     pin.style.left = advertisement.location.x - pinParams.WIDTH / 2 + 'px';
@@ -27,14 +33,20 @@
     pin.querySelector('img').alt = advertisement.offer.title;
 
     pin.addEventListener('click', function () {
-      removePinActiveClass(pin);
+      onPinClick(pin);
       window.card.show(advertisement);
     });
+
     pin.addEventListener('keydown', function (evt) {
-      removePinActiveClass(pin);
+      onPinClick(pin);
       window.utils.isEnterEvent(evt, window.card.show, advertisement);
     });
 
     return pin;
+  };
+
+  window.pin = {
+    generate: generatePin,
+    removeActiveClass: removeActiveClass
   };
 })();
