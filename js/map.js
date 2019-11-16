@@ -35,15 +35,16 @@
 
     var x = pinStyleLeft + mainPinParams.HALF_WIDTH;
     var y = !isMapActive ? pinStyleTop + mainPinParams.HALF_HEIGHT : pinStyleTop + mainPinParams.HEIGHT;
-    return 'x: ' + x + ' y: ' + y;
+    return [x, y];
   };
-
-  var initialMainPinCoords = getMapPinCoords();
 
   var setInitialMainPinCoords = function () {
     mapPin.style.left = pinCoords.X + 'px';
     mapPin.style.top = pinCoords.Y + 'px';
-    adFormAddress.value = initialMainPinCoords;
+    var coords = getMapPinCoords();
+    var coordsX = coords[0];
+    var coordsY = coords[1];
+    adFormAddress.value = 'x: ' + coordsX + ' y: ' + coordsY;
   };
 
   var deleteAllPins = function () {
@@ -82,7 +83,7 @@
     isMapActive = true;
     map.classList.remove('map--faded');
 
-    window.form.toggle(true);
+    window.form.toggle();
     window.form.toggleAllElements(false);
     window.form.setAddress(getMapPinCoords());
     window.form.activate();
@@ -102,7 +103,7 @@
     deleteAllPins();
     setInitialMainPinCoords();
 
-    window.form.toggle(false);
+    window.form.toggle();
     window.form.toggleAllElements(true);
     avatar.src = 'img/muffin-grey.svg';
     housingPhotoBlock.innerHTML = '';

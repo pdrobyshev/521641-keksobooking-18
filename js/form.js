@@ -88,24 +88,18 @@
     var requiredInputs = document.querySelectorAll('input:required');
 
     requiredInputs.forEach(function (input) {
-      if (!input.checkValidity()) {
-        input.style.boxShadow = '0 0 2px 2px #ff6547';
-      } else {
-        input.style.boxShadow = '';
-      }
+      input.style.boxShadow = !input.checkValidity() ? '0 0 2px 2px #ff6547' : '';
     });
   };
 
-  var toggleAdForm = function (bool) {
-    if (bool) {
-      adForm.classList.remove('ad-form--disabled');
-    } else {
-      adForm.classList.add('ad-form--disabled');
-    }
+  var toggleAdForm = function () {
+    adForm.classList.toggle('ad-form--disabled');
   };
 
   var setAddress = function (coords) {
-    adFormAddress.value = coords;
+    var coordsX = coords[0];
+    var coordsY = coords[1];
+    adFormAddress.value = 'x: ' + coordsX + ' y: ' + coordsY;
   };
 
   type.addEventListener('change', onTypeChange);
