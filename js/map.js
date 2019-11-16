@@ -22,8 +22,6 @@
   var map = document.querySelector('.map');
   var mapPinsList = map.querySelector('.map__pins');
   var mapPin = mapPinsList.querySelector('.map__pin--main');
-  var adForm = document.querySelector('.ad-form');
-  var adFormResetButton = adForm.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
   var avatar = document.querySelector('.ad-form-header__preview img');
   var housingPhotoBlock = document.querySelector('.ad-form__photo');
@@ -164,12 +162,6 @@
     });
   };
 
-  var onAdFormSubmit = function (evt) {
-    evt.preventDefault();
-    window.form.checkInputsValidity();
-    window.data.upload(new FormData(adForm), onFormSubmitSuccess, onError);
-  };
-
   window.form.toggleAllElements(true);
 
   var activateMainMapPin = function (evt, data) {
@@ -240,7 +232,9 @@
     document.addEventListener('mouseup', onMouseUp);
   };
 
-  adForm.addEventListener('submit', onAdFormSubmit);
-
-  adFormResetButton.addEventListener('click', deactivateMap);
+  window.map = {
+    onFormSubmitSuccess: onFormSubmitSuccess,
+    onError: onError,
+    deactivate: deactivateMap
+  };
 })();

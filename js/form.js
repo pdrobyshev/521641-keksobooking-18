@@ -26,8 +26,9 @@
   var filterElements = document.querySelectorAll('.map__filter');
   var filterFeatures = document.querySelectorAll('.map__features');
   var adForm = document.querySelector('.ad-form');
-  var adFormSubmitButton = adForm.querySelector('.ad-form__submit');
   var adFormAddress = document.querySelector('input[name="address"]');
+  var adFormSubmitButton = adForm.querySelector('.ad-form__submit');
+  var adFormResetButton = document.querySelector('.ad-form__reset');
 
   var toggleAllFormElements = function (bool) {
     window.utils.toggleFormElements(formElements, bool);
@@ -82,6 +83,14 @@
   var activate = function () {
     setPrice();
     compareRoomsToCapacity();
+
+    type.addEventListener('change', onTypeChange);
+    checkIn.addEventListener('change', onCheckOutTimeChange);
+    checkOut.addEventListener('change', onCheckInTimeChange);
+    rooms.addEventListener('change', onRoomsChange);
+    adFormSubmitButton.addEventListener('click', checkFormInputs);
+    adForm.addEventListener('submit', onAdFormSubmit);
+    adFormResetButton.addEventListener('click', window.map.deactivate);
   };
 
   var checkFormInputs = function () {
@@ -106,16 +115,15 @@
     adForm.reset();
   };
 
-  type.addEventListener('change', onTypeChange);
-  checkIn.addEventListener('change', onCheckOutTimeChange);
-  checkOut.addEventListener('change', onCheckInTimeChange);
-  rooms.addEventListener('change', onRoomsChange);
-  adFormSubmitButton.addEventListener('click', checkFormInputs);
+  var onAdFormSubmit = function (evt) {
+    evt.preventDefault();
+    checkFormInputs();
+    window.data.upload(new FormData(adForm), window.map.onFormSubmitSuccess, window.map.onError);
+  };
 
   window.form = {
     activate: activate,
     toggleAllElements: toggleAllFormElements,
-    checkInputsValidity: checkFormInputs,
     toggle: toggleAdForm,
     setAddress: setAddress,
     reset: reset
