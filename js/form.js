@@ -102,6 +102,10 @@
     adFormAddress.value = 'x: ' + coordsX + ' y: ' + coordsY;
   };
 
+  var reset = function () {
+    adForm.reset();
+  };
+
   type.addEventListener('change', onTypeChange);
   checkIn.addEventListener('change', onCheckOutTimeChange);
   checkOut.addEventListener('change', onCheckInTimeChange);
@@ -113,6 +117,7 @@
     toggleAllElements: toggleAllFormElements,
     checkInputsValidity: checkFormInputs,
     toggle: toggleAdForm,
-    setAddress: setAddress
+    setAddress: setAddress,
+    reset: reset
   };
 })();

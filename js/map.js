@@ -23,7 +23,6 @@
   var mapPinsList = map.querySelector('.map__pins');
   var mapPin = mapPinsList.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
-  var adFormAddress = document.querySelector('input[name="address"]');
   var adFormResetButton = adForm.querySelector('.ad-form__reset');
   var mapFilters = document.querySelector('.map__filters');
   var avatar = document.querySelector('.ad-form-header__preview img');
@@ -42,9 +41,7 @@
     mapPin.style.left = pinCoords.X + 'px';
     mapPin.style.top = pinCoords.Y + 'px';
     var coords = getMapPinCoords();
-    var coordsX = coords[0];
-    var coordsY = coords[1];
-    adFormAddress.value = 'x: ' + coordsX + ' y: ' + coordsY;
+    window.form.setAddress(coords);
   };
 
   var deleteAllPins = function () {
@@ -97,7 +94,7 @@
     map.classList.add('map--faded');
 
     mapFilters.reset();
-    adForm.reset();
+    window.form.reset();
 
     window.card.remove();
     deleteAllPins();
