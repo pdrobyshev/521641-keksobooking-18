@@ -6,7 +6,7 @@
   var STATUS_SUCCESS = 200;
   var TIMEOUT = 10000;
 
-  var request = function (onSuccess, onError) {
+  var getRequestInstance = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.timeout = TIMEOUT;
@@ -31,13 +31,13 @@
   };
 
   var download = function (onSuccess, onError) {
-    var xhr = request(onSuccess, onError);
+    var xhr = getRequestInstance(onSuccess, onError);
     xhr.open('GET', DATA_URL);
     xhr.send();
   };
 
   var upload = function (data, onSuccess, onError) {
-    var xhr = request(onSuccess, onError);
+    var xhr = getRequestInstance(onSuccess, onError);
     xhr.open('POST', URL);
     xhr.send(data);
   };

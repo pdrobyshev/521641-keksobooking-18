@@ -56,7 +56,7 @@
   };
 
   var setPrice = function () {
-    typeOptions.forEach(function (option) {
+    Array.from(typeOptions).find(function (option) {
       if (type.value === option.value) {
         setMinPrice(housingMinPrices[option.value]);
       }
