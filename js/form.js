@@ -56,11 +56,11 @@
   };
 
   var setPrice = function () {
-    Array.from(typeOptions).find(function (option) {
-      if (type.value === option.value) {
-        setMinPrice(housingMinPrices[option.value]);
-      }
+    var typeActiveOption = Array.from(typeOptions).find(function (option) {
+      return type.value === option.value;
     });
+
+    setMinPrice(housingMinPrices[typeActiveOption.value]);
   };
 
   var onTypeChange = function () {
